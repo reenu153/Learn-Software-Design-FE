@@ -1,0 +1,58 @@
+import { topics } from '../data/topics'
+import TopicCard from '../components/TopicCard'
+
+const HomeScreen = () => {
+  const currentXP = 50; //make it dyhnamic later
+   const totalXP = 300;
+
+  const progressWidth = (currentXP / totalXP) * 100;
+   return (
+      <div className="min-h-screen p-20 mx-auto bg-gradient-to-br from-primary-100 via-secondary-300 to-primary-500">
+
+         <header className="mb-10 text-center  text-text">
+  <h1 className="
+    text-4xl sm:text-5xl font-extrabold
+    bg-gradient-to-r from-primary-600 to-secondary-500
+    bg-clip-text text-transparent
+    tracking-tight
+  ">
+    Software Design Academy
+  </h1>
+
+  <p className="mt-3 text-text-muted text-sm sm:text-base max-w-xl mx-auto">
+    Learn software design through interactive, game-like challenges.
+  </p>
+
+  {/* XP Bar */}
+
+  <div className="text-xs text-text-muted mb-1 text-left">
+        Level 1 · {currentXP} XP
+      </div>
+      <div className="h-3 rounded-full bg-surface-muted overflow-hidden">
+        <div
+          className="h-full bg-gradient-to-r from-primary-500 to-secondary-500 animate-pulse"
+          style={{ width: `${progressWidth}%` }}
+        />
+      </div>
+
+</header>
+
+<section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+  {topics.map((t, index) => (
+    <div
+      key={t.id}
+      className="
+        transform transition-all duration-300
+        hover:-translate-y-2 hover:scale-[1.02]
+      "
+      style={{ animationDelay: `${index * 80}ms` }}
+    >
+      <TopicCard topic={t} />
+    </div>
+  ))}
+</section>
+         </div>
+   )
+}
+
+export default HomeScreen
