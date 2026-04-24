@@ -50,8 +50,8 @@ const App = () => {
                path="/module/:questionId/editor"
                element={
                   <ProtectedRoute>
-                     {/* <SolveQuestion /> */}
-                     <Editor />
+                     <SolveQuestion />
+                     {/* <Editor /> */}
                   </ProtectedRoute>
                }
             />
