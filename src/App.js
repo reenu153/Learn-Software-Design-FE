@@ -10,6 +10,7 @@ import Header from './components/Header'
 import Submissions from './components/Submissions'
 import SolveQuestion from './pages/SolveQuestion'
 import Editor from './components/Editor'
+import SignupPage from './pages/SignUp'
 
 const App = () => {
    const location = useLocation()
@@ -27,7 +28,7 @@ const App = () => {
             />
 
             <Route path="/login" element={<LoginPage />} />
-
+            <Route path="/signup" element={<SignupPage />} />
             <Route
                path="/topic/:topicId"
                element={

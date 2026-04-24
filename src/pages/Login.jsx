@@ -65,6 +65,7 @@ export default function LoginPage() {
         >
           Login
         </div>
+        <div className="text-center">Do not have an account? <span className="font-bold cursor-pointer" onClick={()=> navigate('/signup')}>Sign up</span></div>
       </div>
     </div>
   );

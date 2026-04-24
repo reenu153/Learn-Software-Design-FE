@@ -8,12 +8,13 @@ export default function SignupPage() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const handleSignup = async () => {
-    const res = await fetch("/api/signup", {
+    const res = await fetch(`${BASE_URL}/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({ username, password, role: "student" })
     });
 
     if (!res.ok) {
@@ -26,21 +27,21 @@ export default function SignupPage() {
     // auto login after signup
     login(data.token, data.user);
 
-    navigate("/dashboard");
+    navigate("/");
   };
 
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="space-y-4 w-80">
-        <h2 className="text-xl font-bold">Sign Up</h2>
-
+        <h2 className="text-xl font-bold text-center">Sign Up</h2>
+        <div>Enter username</div>
         <input
           className="border p-2 w-full"
           placeholder="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-
+        <div>Enter Password</div>
         <input
           type="password"
           className="border p-2 w-full"
@@ -49,12 +50,12 @@ export default function SignupPage() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button
+        <div
           onClick={handleSignup}
-          className="bg-green-600 text-white w-full py-2 rounded"
+          className="bg-primary-300 cursor-pointer text-center w-full py-2 rounded"
         >
           Sign Up
-        </button>
+        </div>
       </div>
     </div>
   );
