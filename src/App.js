@@ -1,28 +1,90 @@
-import '@xyflow/react/dist/style.css';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import DragAndDrop from './components/DragAndDrop';
-import HomeScreen from './components/HomeScreen';
-import TopicScreen from './components/TopicScreen';
-import LessonIntro from './components/LessonIntro';
-
+import { Routes, Route, useLocation } from 'react-router-dom'
+import HomeScreen from './pages/HomeScreen'
+import MermaidPage from './components/Mermaid'
+import AdminCurriculumPage from './pages/AdminPage'
+import LoginPage from './pages/Login'
+import ProtectedRoute from './pages/ProtectedRoute'
+import ModulesPage from './pages/ModulesPage'
+import QuestionsByModulePage from './pages/QuestionsByModulePage'
+import Header from './components/Header'
+import Submissions from './components/Submissions'
+import SolveQuestion from './pages/SolveQuestion'
+import Editor from './components/Editor'
 
 const App = () => {
-   
-   
-    return (
+   const location = useLocation()
+   return (
       <div className="w-screen h-screen">
-           <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomeScreen />} />
-        <Route path="/topic/:topicId" element={<TopicScreen />} />
-        <Route path="/lesson/:lessonId" element={<LessonIntro />} />
-        <Route path="/lesson/:lessonId/editor" element={<DragAndDrop />} />
-        {/* <Route path="/lesson/:lessonId/feedback" element={<FeedbackScreen />} /> */}
-      </Routes>
-    </BrowserRouter>
-        
+         {location.pathname !== '/login' && <Header />}
+         <Routes>
+            <Route
+               path="/"
+               element={
+                  <ProtectedRoute>
+                     <HomeScreen />
+                  </ProtectedRoute>
+               }
+            />
+
+            <Route path="/login" element={<LoginPage />} />
+
+            <Route
+               path="/topic/:topicId"
+               element={
+                  <ProtectedRoute>
+                     <ModulesPage />
+                  </ProtectedRoute>
+               }
+            />
+
+            <Route
+               path="/module/:moduleId"
+               element={
+                  <ProtectedRoute>
+                     <QuestionsByModulePage />
+                  </ProtectedRoute>
+               }
+            />
+
+            <Route
+               path="/module/:questionId/editor"
+               element={
+                  <ProtectedRoute>
+                     {/* <SolveQuestion /> */}
+                     <Editor />
+                  </ProtectedRoute>
+               }
+            />
+
+            <Route
+               path="/mermaid"
+               element={
+                  <ProtectedRoute>
+                     <MermaidPage />
+                  </ProtectedRoute>
+               }
+            />
+
+            <Route
+               path="/admin"
+               element={
+                  <ProtectedRoute>
+                     <AdminCurriculumPage />
+                  </ProtectedRoute>
+               }
+            />
+
+            <Route
+               path="/:questionId/submissions"
+               element={
+                  <ProtectedRoute>
+                     <Submissions />
+                  </ProtectedRoute>
+               }
+            />
+         </Routes>
       </div>
-    );
-  }
+   )
+}
 
 export default App

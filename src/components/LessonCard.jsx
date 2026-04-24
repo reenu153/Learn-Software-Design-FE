@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 
-export default function LessonCard({ lesson }) {
+export default function moduleCard({ module }) {
   const navigate = useNavigate();
 
   return (
     <div
-  onClick={() => navigate(`/lesson/${lesson.id}`)}
+  onClick={() => navigate(`/module/${module.module_id}`)}
   className={`
     relative p-5 rounded-2xl border
     transition-all duration-300
@@ -21,28 +21,28 @@ export default function LessonCard({ lesson }) {
         text-lg font-extrabold
         text-gray-400"
       `}>
-        {lesson.title}
+        {module.title}
       </h3>
 
       <p className="text-sm text-text-muted mt-1 leading-snug">
-        {lesson.description}
+        {module.description}
       </p>
     </div>
 
     {/* XP Badge */}
     <div className="
-      text-xs font-bold
+      text-[12px] font-bold text-center
       bg-secondary-100 text-secondary-600
       px-3 py-1 rounded-full min-w-[80px]
     ">
-      ⭐ {lesson.xp} XP
+      ⭐ {module.earned_xp} / {module.total_xp} XP
     </div>
   </div>
 
   {/* Status */}
   <div className="mt-4 flex justify-between items-center text-xs">
     <span className="text-text-muted">
-      Status: <span className="font-semibold">{lesson.status || "Not started"}</span>
+      Status: <span className="font-semibold">{module?.progress_percent? `${module?.progress_percent}%`: "Not started"}</span>
     </span>
       <span className="text-secondary-500 font-semibold">
         ▶ 

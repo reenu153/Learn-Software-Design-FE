@@ -1,14 +1,21 @@
-import { topics } from '../data/topics'
 import TopicCard from '../components/TopicCard'
+import { useEffect, useState } from 'react';
+import { fetchLessons } from '../api';
 
 const HomeScreen = () => {
-  const currentXP = 50; //make it dyhnamic later
-   const totalXP = 300;
 
-  const progressWidth = (currentXP / totalXP) * 100;
+  const [coursePaths,setCoursePaths] = useState([]);
+
+  useEffect(()=>{
+    fetchLessons().then((data)=>{
+      setCoursePaths(data);
+    });
+  },[]);
+
    return (
-      <div className="min-h-screen p-20 mx-auto bg-gradient-to-br from-primary-100 via-secondary-300 to-primary-500">
-
+    <div >
+    
+      <div className='min-h-screen p-10 bg-gradient-to-br from-primary-100 via-secondary-300 to-primary-500'>
          <header className="mb-10 text-center  text-text">
   <h1 className="
     text-4xl sm:text-5xl font-extrabold
@@ -25,7 +32,7 @@ const HomeScreen = () => {
 
   {/* XP Bar */}
 
-  <div className="text-xs text-text-muted mb-1 text-left">
+  {/* <div className="text-xs text-text-muted mb-1 text-left">
         Level 1 · {currentXP} XP
       </div>
       <div className="h-3 rounded-full bg-surface-muted overflow-hidden">
@@ -33,12 +40,12 @@ const HomeScreen = () => {
           className="h-full bg-gradient-to-r from-primary-500 to-secondary-500 animate-pulse"
           style={{ width: `${progressWidth}%` }}
         />
-      </div>
+      </div> */}
 
 </header>
 
 <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-  {topics.map((t, index) => (
+  {coursePaths.map((t, index) => (
     <div
       key={t.id}
       className="
@@ -51,6 +58,7 @@ const HomeScreen = () => {
     </div>
   ))}
 </section>
+         </div>
          </div>
    )
 }

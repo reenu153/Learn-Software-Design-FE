@@ -1,6 +1,5 @@
-
 code {
-    font-family: 'Open Sans', sans-serif, monospace;
+   font-family: 'Open Sans', sans-serif, monospace;
 }
 
 @import 'tailwindcss/base';
@@ -10,22 +9,40 @@ code {
 @import 'tailwindcss/utilities';
 
 body {
-  margin: 0;
-  font-family: 'Open Sans', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  @apply text-text font-sans;
+   margin: 0;
+   font-family: 'Open Sans', sans-serif;
+   -webkit-font-smoothing: antialiased;
+   -moz-osx-font-smoothing: grayscale;
+   @apply text-text font-sans;
 }
 
+svg[aria-roledescription='error'] {
+   display: none !important;
+}
+
+.loader {
+   border: 4px solid #f3f3f3;
+   border-top: 4px solid #3498db;
+   border-radius: 50%;
+   width: 30px;
+   height: 30px;
+   animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+   100% {
+      transform: rotate(360deg);
+   }
+}
 
 @keyframes colorChange {
-  0% {
-    background-color: green;
-  }
-  50% {
-    background-color: red;
-  }
-  100% {
-    background-color: green;
-  }
+   0% {
+      background-color: green;
+   }
+   50% {
+      background-color: red;
+   }
+   100% {
+      background-color: green;
+   }
 }

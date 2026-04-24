@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 export default function TopicCard({ topic }) {
   const navigate = useNavigate();
 
+  topic.unlocked = topic.unlocked ?? true;
+
   return (
     <div
       role="button"
@@ -11,7 +13,7 @@ export default function TopicCard({ topic }) {
         relative p-6 rounded-2xl text-primary-500
         transition-all duration-300
         bg-gradient-to-br from-surface to-primary-50
-        border border-primary-200 min-h-[275px]
+        border border-primary-200 min-h-[200px]
 
         ${topic.unlocked
           ? "hover:-translate-y-1 hover:shadow-glow hover:scale-[1.02] cursor-pointer"
@@ -50,7 +52,7 @@ export default function TopicCard({ topic }) {
       {/* CTA Hint */}
       {topic.unlocked && (
         <div>
-          <div className="mt-6">
+          {/* <div className="mt-6">
           <div className="flex items-center justify-between text-xs text-text-muted mb-1">
             <span>Progress</span>
             <span className="font-semibold text-primary-600">
@@ -67,8 +69,8 @@ export default function TopicCard({ topic }) {
               `}
               style={{ width: topic.progress ?? "0%" }}
             />
-          </div>
-        </div>
+          </div> */}
+        {/* </div> */}
         <div className="mt-4 text-xs font-semibold text-secondary-500">
           ▶ Start Lesson
         </div>
