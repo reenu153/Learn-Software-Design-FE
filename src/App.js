@@ -9,8 +9,8 @@ import QuestionsByModulePage from './pages/QuestionsByModulePage'
 import Header from './components/Header'
 import Submissions from './components/Submissions'
 import SolveQuestion from './pages/SolveQuestion'
-import Editor from './components/Editor'
 import SignupPage from './pages/SignUp'
+import SolveQuestionDragDrop from './pages/SolveQuestionDragDrop'
 
 const App = () => {
    const location = useLocation()
@@ -51,8 +51,8 @@ const App = () => {
                path="/module/:questionId/editor"
                element={
                   <ProtectedRoute>
-                     <SolveQuestion />
-                     {/* <Editor /> */}
+                     {/* <SolveQuestion /> */}
+                     <SolveQuestionDragDrop />
                   </ProtectedRoute>
                }
             />

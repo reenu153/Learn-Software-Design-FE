@@ -108,6 +108,36 @@ export const evaluateAnswer = async (questionId, solution) => {
    }
 }
 
+export const evaluateAnswer2 = async (questionId, payload) => {
+   const token = localStorage.getItem('token')
+   try {
+      const response = await fetch(`${API_BASE_URL}/evaluate-diagram`, {
+         method: 'POST',
+         headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+         },
+         body: JSON.stringify({ question_id: questionId, ...payload }),
+      })
+
+      if (response.status === 401) {
+         localStorage.removeItem('token')
+         window.location.href = '/login'
+         return
+      }
+
+      if (!response.ok) {
+         throw new Error(`Failed to evaluate answer: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+      return data
+   } catch (error) {
+      console.error('Error evaluating answer:', error)
+      throw error
+   }
+}
+
 export const fetchModulesWithProgress = async (course_path_id) => {
    const token = localStorage.getItem('token')
    try {

@@ -6,27 +6,33 @@ import {
    addEdge,
    useNodesState,
    useEdgesState,
+   reconnectEdge,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import Sidebar from './SideBar'
-import InheritanceEdge from './custom edges/InheritenceEdge'
-import CompositionEdge from './custom edges/CompositionEdge'
-import AggregationEdge from './custom edges/AggregationEdge'
-import UMLClassNode from './custom nodes/ClassNode'
-import * as htmlToImage from 'html-to-image'
-import { generateUMLTextDescription } from '../utils/UMLDownloadFunctions'
-import { useParams } from 'react-router-dom'
-import { lessons } from '../data/lessons'
+import ClassNode from './custom nodes/ClassNode'
+import { UMLEdge } from './custom edges/UMLEdge'
+import Markers from './custom edges/Markers'
+import InterfaceNode from './custom nodes/InterfaceNode'
+import ComponentNode from './custom nodes/ComponentNode'
+import { InterfacePortNode } from './custom nodes/IntefacePort'
+import { DatabaseNode } from './custom nodes/Database'
 
-export default function DragAndDrop() {
+export default function DragAndDrop({
+   setReactFlowInstance,
+   activeTab,
+   setActiveTab,
+}) {
    const edgeTypes = {
-      inheritance: InheritanceEdge,
-      composition: CompositionEdge,
-      aggregation: AggregationEdge,
+      uml: UMLEdge,
    }
 
    const nodeTypes = {
-      umlClass: UMLClassNode,
+      classNode: ClassNode,
+      interfaceNode: InterfaceNode,
+      componentNode: ComponentNode,
+      interfacePortNode: InterfacePortNode,
+      databaseNode: DatabaseNode,
    }
 
    const [selectedEdgeType, setSelectedEdgeType] = useState('default')
@@ -39,22 +45,26 @@ export default function DragAndDrop() {
    const onDrop = useCallback(
       (event) => {
          event.preventDefault()
-         const type = event.dataTransfer.getData('application/reactflow')
+
+         const type =
+            event.dataTransfer.getData('application/reactflow') || 'classNode'
 
          const position = {
             x: event.clientX - 250,
             y: event.clientY,
          }
 
+         const schema = nodeSchema[type] || nodeSchema.classNode
+
          const newNode = {
             id: crypto.randomUUID(),
-            type: 'umlClass',
+            type: nodeTypes[type] ? type : 'classNode',
             position,
+
             data: {
-               name: '',
-               attributes: [''],
-               methods: [''],
-               updateNode: (id, changes) =>
+               ...structuredClone(schema),
+
+               onChange: (id, changes) =>
                   setNodes((nds) =>
                      nds.map((n) =>
                         n.id === id
@@ -70,22 +80,13 @@ export default function DragAndDrop() {
       [setNodes]
    )
 
-   useEffect(() => {
-      const handleKeyDown = (event) => {
-         if (event.key === 'Delete') {
-            // delete selected nodes
-            setNodes((nds) => nds.filter((n) => !n.selected))
-
-            // delete selected edges
-            setEdges((eds) => eds.filter((e) => !e.selected))
-         }
-      }
-
-      window.addEventListener('keydown', handleKeyDown)
-      return () => window.removeEventListener('keydown', handleKeyDown)
-   }, [setNodes, setEdges])
-
    const onDragOver = (event) => event.preventDefault()
+
+   const onReconnect = useCallback(
+      (oldEdge, newConnection) =>
+         setEdges((eds) => reconnectEdge(oldEdge, newConnection, eds)),
+      []
+   )
 
    const onConnect = useCallback(
       (params) => {
@@ -93,7 +94,11 @@ export default function DragAndDrop() {
             addEdge(
                {
                   ...params,
-                  type: selectedEdgeType,
+                  type: 'uml',
+                  data: {
+                     umlType: selectedEdgeType,
+                     animated: true,
+                  },
                },
                eds
             )
@@ -102,88 +107,64 @@ export default function DragAndDrop() {
       [selectedEdgeType, setEdges]
    )
 
-   const downloadPng = () => {
-      if (!flowRef.current) return
-
-      htmlToImage
-         .toPng(flowRef.current, {
-            filter: () => true,
-            cacheBust: true,
-            skipFonts: true,
-            backgroundColor: '#ffffff',
-         })
-         .then((dataUrl) => {
-            const link = document.createElement('a')
-            link.download = 'diagram.png'
-            link.href = dataUrl
-            link.click()
-         })
-         .catch((err) => console.error('Error exporting:', err))
-   }
-
-   const { lessonId } = useParams()
-   const lesson = lessons.find((l) => l.id === lessonId) || {}
-   const [open, setOpen] = useState(true)
-
    return (
-      <div className="flex h-screen w-screen bg-gradient-to-b from-primary-50 to-primary-100">
-         <div className="flex flex-col w-56 min-w-56 p-4 flex flex-col gap-6 bg-gradient-to-b from-purple-100 via-pink-100 to-indigo-100 shadow-lg rounded-xl">
-            {open ? (
-               <div
-                  className="cursor-pointer text-[16px] font-bold mb-2"
-                  onClick={() => {
-                     setOpen(false)
-                  }}
-               >
-                  Hide Question
-               </div>
-            ) : (
-               <div
-                  className="cursor-pointer font-bold mb-2   left-1/2"
-                  onClick={() => setOpen(true)}
-               >
-                  Show Question
-               </div>
-            )}
-            <div className='h-[85%]'>
-            <Sidebar setSelectedEdgeType={setSelectedEdgeType} />
-            </div>
-           
-            <div className="w-full rounded-full px-[12px] py-[8px] flex items-end justify-center bg-primary-700 text-white font-bold cursor-pointer hover:bg-primary-800"
-                  onClick={() => {
-                     downloadPng()
-                     console.log(generateUMLTextDescription(nodes, edges))
-                  }}>
-                    Submit
-            </div>
-         </div>
-
-         {open && (
-            <div className="w-1/2 overflow-auto p-[10px]">
-               <pre className="text-wrap">{lesson.question}</pre>
-            </div>
-         )}
-            <div
-               ref={flowRef}
-               className="w-full"
+      <div className="flex w-screen">
+         <Sidebar
+            selectedEdgeType={selectedEdgeType}
+            setSelectedEdgeType={setSelectedEdgeType}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+         />
+         <div ref={flowRef} className="w-full">
+            <ReactFlow
+               onInit={setReactFlowInstance}
+               nodes={nodes}
+               edges={edges}
+               nodeTypes={nodeTypes}
+               edgeTypes={edgeTypes}
+               onNodesChange={onNodesChange}
+               onEdgesChange={onEdgesChange}
+               onConnect={onConnect}
+               onDrop={onDrop}
+               onDragOver={onDragOver}
+               fitView
+               elementsSelectable
+               onReconnect={onReconnect}
+               edgesReconnectable
+               edgesFocusable
+               defaultEdgeOptions={{
+                  animated: true,
+                  type: 'smoothstep',
+               }}
+               deleteKeyCode={['Backspace', 'Delete']}
             >
-               <ReactFlow
-                  nodes={nodes}
-                  edges={edges}
-                  nodeTypes={nodeTypes}
-                  edgeTypes={edgeTypes}
-                  onNodesChange={onNodesChange}
-                  onEdgesChange={onEdgesChange}
-                  onConnect={onConnect}
-                  onDrop={onDrop}
-                  onDragOver={onDragOver}
-                  fitView
-               >
-                  <Background />
-                  <Controls />
-               </ReactFlow>
-
+               <Background />
+               <Controls />
+               <Markers />
+            </ReactFlow>
          </div>
       </div>
    )
+}
+
+const nodeSchema = {
+   classNode: {
+      name: '',
+      attributes: [],
+      methods: [],
+   },
+
+   interfaceNode: {
+      name: '',
+      mode: 'provided',
+   },
+
+   databaseNode: {
+      name: '',
+   },
+
+   componentNode: {
+      name: '',
+      ports: [],
+   },
 }

@@ -1,51 +1,50 @@
+export default function generateText(graph) {
+   const { nodes = [], edges = [] } = graph
 
-export function generateUMLTextRepresentation(nodes, edges) {
-  // Convert nodes into classes
-  const classes = nodes.map((node) => {
-    const { id, data } = node;
+   const clean = (s) =>
+      (s || '')
+         .replace(/\s+/g, '_')
+         .replace(/[^\w_]/g, '')
+         .toLowerCase()
 
-    // Expect node.data to contain: name, attributes (array), methods (array)
-    return {
-      id,
-      name: data.name || "Unnamed",
-      attributes: Array.isArray(data.attributes) ? data.attributes : [],
-      methods: Array.isArray(data.methods) ? data.methods : [],
-    };
-  });
+   const nodeMap = new Map()
 
-  // Convert edges into relations
-  const relations = edges.map((edge) => {
-    return {
-      from: edge.source,
-      to: edge.target,
-      type: edge.type || "association", // default type
-    };
-  });
+   const nodesText = nodes.map((n) => {
+      const name = clean(n.data?.name || n.id)
+      nodeMap.set(n.id, name)
 
-  return {
-    umlNodes: classes,
-    umlRelations: relations,
-  };
-}
+      switch (n.type) {
+         case 'classNode':
+            return `CLASS ${name} | attrs: ${(n.data?.attributes || []).join(', ') || 'none'} | methods: ${(n.data?.methods || []).join(', ') || 'none'}`
 
+         case 'componentNode':
+            return `COMPONENT ${name} | ports: ${(n.data?.ports || []).join(', ') || 'none'}`
 
-export function generateUMLTextDescription(nodes, edges) {
-  const { umlNodes, umlRelations } = generateUMLTextRepresentation(nodes, edges);
-  const classesText = umlNodes
-    .map((cls) => {
-      const attrText = cls.attributes.length ? cls.attributes.join(", ") : "none";
-      const methodText = cls.methods.length ? cls.methods.join(", ") : "none";
-      return `Class ${cls.name}:\n  Attributes: ${attrText}\n  Methods: ${methodText}`;
-    })
-    .join("\n\n");
+         case 'interfaceNode':
+         case 'interfacePortNode':
+            return `INTERFACE ${name}`
 
-  const relationsText = umlRelations
-    .map((rel) => {
-      const fromClass = umlNodes.find((n) => n.id === rel.from)?.name || rel.from;
-      const toClass = umlNodes.find((n) => n.id === rel.to)?.name || rel.to;
-      return `Relation: ${fromClass} -> ${toClass} [${rel.type}]`;
-    })
-    .join("\n");
+         case 'databaseNode':
+            return `DATABASE ${name}`
 
-  return `${classesText}\n\n${relationsText}`;
+         default:
+            return `NODE ${name} (${n.type})`
+      }
+   })
+
+   const edgeLines = edges.map((e) => {
+      const source = nodeMap.get(e.source)
+      const target = nodeMap.get(e.target)
+
+      const type = e.data?.umlType || 'association'
+
+      return `
+  RELATIONSHIP:
+  source: ${source}
+  target: ${target}
+  type: ${type}
+  `
+   })
+
+   return [...nodesText, '', ...edgeLines].join('\n')
 }
