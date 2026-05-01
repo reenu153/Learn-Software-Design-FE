@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import mermaid from "mermaid";
 import { useParams } from 'react-router-dom'
-import { evaluateAnswer, evaluateAnswer2, fetchQuestionById, fetchQuestionSubmissions } from '../api'
-import MermaidCheatSheet from "../components/MermaidCheatSheet";
+import { evaluateAnswer2, fetchQuestionById } from '../api'
 import formatFeedbackToJSX from "../utils/formatFeedback";
 import DragAndDrop from "../components/DragAndDrop";
-import generateText from "../utils/UMLDownloadFunctions";
 
 
 export default function SolveQuestionDragDrop() {

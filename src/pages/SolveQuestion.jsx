@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import mermaid from "mermaid";
 import { useParams } from 'react-router-dom'
-import { evaluateAnswer, fetchQuestionById, fetchQuestionSubmissions } from '../api'
+import { evaluateAnswer, fetchQuestionById } from '../api'
 import MermaidCheatSheet from "../components/MermaidCheatSheet";
 import formatFeedbackToJSX from "../utils/formatFeedback";
 

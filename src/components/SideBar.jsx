@@ -8,125 +8,6 @@ export default function Sidebar({ selectedEdgeType,setSelectedEdgeType, activeTa
     event.dataTransfer.effectAllowed = "move";
   };
 
-//   return (
-//     <aside className="w-[250px] bg-white shadow-sm p-5 flex flex-col gap-8 overflow-y-auto">
-
-//   {/* HEADER */}
-//   <div>
-//     <h2 className="text-l font-bold text-gray-800 tracking-tight">
-//       UML Toolbox
-//     </h2>
-//     <p className="text-sm text-gray-500 mt-1">
-//       Drag nodes or select relationships
-//     </p>
-//   </div>
-
-//   {/* NODES */}
-//   <div>
-//     <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-3">
-//       Nodes
-//     </h3>
-
-//     <div className="space-y-3 text-sm">
-//       <motion.button
-//         className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 hover:bg-purple-50 hover:border-purple-300 transition text-gray-700 font-medium"
-//         // whileHover={{ scale: 1.02 }}
-//         whileTap={{ scale: 0.97 }}
-//         draggable
-//         onDragStart={(e) => onNodeDragStart(e, "classNode")}
-//       >
-//         <span>Class</span>
-//         <span className="text-purple-600 text-sm font-semibold">□</span>
-//       </motion.button>
-
-//       <motion.button
-//         className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 hover:bg-purple-50 hover:border-purple-300 transition text-gray-700 font-medium"
-//         whileHover={{ scale: 1.02 }}
-//         whileTap={{ scale: 0.97 }}
-//         draggable
-//         onDragStart={(e) => onNodeDragStart(e, "interfaceNode")}
-//       >
-//         <span>Interface</span>
-//         <span className="text-purple-600 text-sm font-semibold">◫</span>
-//       </motion.button>
-
-//       <motion.button
-//         className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 hover:bg-purple-50 hover:border-purple-300 transition text-gray-700 font-medium"
-//         whileHover={{ scale: 1.02 }}
-//         whileTap={{ scale: 0.97 }}
-//         draggable
-//         onDragStart={(e) => onNodeDragStart(e, "componentNode")}
-//       >
-//         <span>Component</span>
-//         <span className="text-purple-600 text-sm font-semibold">◫</span>
-//       </motion.button>
-//     </div>
-//   </div>
-
-//   {/* RELATIONSHIPS */}
-//   <div>
-//     <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-400 mb-3">
-//       Relationships
-//     </h3>
-
-//     <div className="space-y-3 text-sm">
-//       {[
-//         { label: "Inheritance", type: "inheritance", icon: "→" },
-//         { label: "Composition", type: "composition", icon: "◆" },
-//         { label: "Aggregation", type: "aggregation", icon: "◇" },
-//         { label: "Dependency", type: "dependency", icon: "⇢" },
-//         { label: "Association", type: "association", icon: "-" },
-//       ].map((edge) => (
-//         <motion.button
-//           key={edge.type}
-//           onClick={() => setSelectedEdgeType(edge.type)}
-//           whileHover={{ scale: 1.02 }}
-//           whileTap={{ scale: 0.97 }}
-//           className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border transition font-medium
-//             ${
-//               selectedEdgeType === edge.type
-//                 ? "bg-purple-100 border-purple-400 text-purple-700"
-//                 : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-purple-50 hover:border-purple-300"
-//             }`}
-//         >
-//           <span>{edge.label}</span>
-//           <span className="text-sm">{edge.icon}</span>
-//         </motion.button>
-//       ))}
-//     </div>
-//   </div>
-
-//   {/* FOOTER */}
-//   <div className="mt-auto pt-6 border-t border-gray-100">
-//     <p className="text-xs text-gray-400 leading-relaxed">
-//       Tip: Drag nodes into canvas and connect them using selected relationship.
-//     </p>
-//   </div>
-
-// </aside>
-//   );
-// }
-
-
-
-const handleTabClick = (nextTab) => {
-  if (nextTab === activeTab) return;
-
-  // const hasDiagram = nodes.length > 0 || edges.length > 0;
-
-  // if (hasDiagram) {
-    const confirmSwitch = window.confirm(
-      "Switching diagram type will clear your current diagram. Do you want to continue?"
-    );
-
-    if (!confirmSwitch) return;
-
-    // clearDiagram(); // TODO: reset nodes + edges
-  // }
-
-  setActiveTab(nextTab);
-};
-
 
 const classEdges = [
   { label: "Inheritance", type: "inheritance", icon: "▷" },
@@ -163,7 +44,7 @@ return (
         {["class", "component"].map((tab) => (
           <button
             key={tab}
-            onClick={() => handleTabClick(tab)}
+            onClick={() => setActiveTab(tab)}
             className={`flex-1 py-2 text-sm font-semibold rounded-lg transition ${
               activeTab === tab
                 ? "bg-white shadow text-purple-700"

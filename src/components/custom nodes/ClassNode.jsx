@@ -34,7 +34,7 @@ export default function ClassNode({ id, data }) {
   return (
     <div>
       <motion.div
-        className="w-64 bg-white border border-gray-300 rounded-2xl shadow-md overflow-hidden"
+        className="w-64 bg-white border border-gray-300 shadow-md overflow-hidden"
         whileHover={{
           scale: 1.01,
           boxShadow: "0 10px 25px rgba(0,0,0,0.08)",

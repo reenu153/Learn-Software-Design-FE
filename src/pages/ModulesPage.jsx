@@ -41,8 +41,7 @@ export default function ModulesPage() {
                   Complete modules to gain XP and unlock the next challenge.
                </p>
 
-               {/* Progress Bar */}
-               <div className="mt-5 max-w-md">
+               {/* <div className="mt-5 max-w-md">
                   <div className="flex justify-between text-xs text-text-muted mb-1">
                      <span>Topic Progress</span>
                      <span>40%</span>
@@ -50,10 +49,9 @@ export default function ModulesPage() {
                   <div className="h-3 rounded-full bg-surface-muted overflow-hidden">
                      <div className="h-full w-2/5 bg-gradient-to-r from-primary-500 to-secondary-500 animate-pulse" />
                   </div>
-               </div>
+               </div> */}
             </div>
 
-            {/* Lessons Grid */}
             <div
                className="
             grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3
