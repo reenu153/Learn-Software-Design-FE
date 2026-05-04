@@ -7,9 +7,7 @@ export default function Header() {
 
   const isHome = location.pathname === "/";
 
-  const user = {
-    name: "Reenu",
-  };
+  const user = localStorage.getItem("user") || { name: "User" };
 
   const handleBack = () => {
     navigate(-1);
@@ -57,13 +55,13 @@ export default function Header() {
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
           {/* Avatar */}
-          <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center">
-            {user.name.charAt(0).toUpperCase()}
+          <div className="w-8 h-8 rounded-full bg-primary-100 text-white flex items-center justify-center">
+            {user?.charAt(0).toUpperCase()}
           </div>
 
           {/* Username */}
           <span className="hidden sm:block text-sm font-medium">
-            {user.name}
+            {user}
           </span>
         </div>
 

@@ -29,6 +29,12 @@ svg[aria-roledescription='error'] {
    animation: spin 1s linear infinite;
 }
 
+.react-flow__handle {
+   width: 14px;
+   height: 14px;
+   border-radius: 4px; /* optional: slightly square for better visibility */
+ }
+
 @keyframes spin {
    100% {
       transform: rotate(360deg);

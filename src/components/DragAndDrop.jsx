@@ -7,6 +7,7 @@ import {
    useNodesState,
    useEdgesState,
    reconnectEdge,
+   ConnectionMode
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import Sidebar from './SideBar'
@@ -89,12 +90,25 @@ export default function DragAndDrop({
    )
 
    const onConnect = useCallback(
-      (params) => {
+      (connection) => {
+         let source, target, sourceHandle, targetHandle
+  
+ 
+           source = connection.target
+           target = connection.source
+           sourceHandle = connection.targetHandle?.replace('target', 'source')
+           targetHandle = connection.sourceHandle?.replace('source', 'target')
+
          setEdges((eds) =>
             addEdge(
                {
-                  ...params,
+                  source,
+                  target,
+                  sourceHandle,
+                  targetHandle,
                   type: 'uml',
+                      style: { stroke: '#000000', strokeWidth: 2 },
+
                   data: {
                      umlType: selectedEdgeType,
                      animated: true,
@@ -129,6 +143,7 @@ export default function DragAndDrop({
                onDragOver={onDragOver}
                fitView
                elementsSelectable
+               connectionMode={ConnectionMode.Loose}
                onReconnect={onReconnect}
                edgesReconnectable
                edgesFocusable
