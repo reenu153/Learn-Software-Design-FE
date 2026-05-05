@@ -100,11 +100,11 @@ export default function Sidebar({
                      <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">
                         Relationships
                      </h3>
-                            <div className="py-3 border-t border-gray-100 text-xs text-gray-400">
-        Tip: Select a relationship type first. Then drag from a black
-            handle (●) on the source node to a purple handle (●) on the
-            destination node.
-         </div>
+                     <div className="py-3 border-t border-gray-100 text-xs text-gray-400">
+                        Tip: To connect nodes, first select a relationship type.
+                        Then drag from a handle (●) on one node to a handle on
+                        another node
+                     </div>
 
                      <div className="space-y-3">
                         {classEdges.map((edge) => (
@@ -184,7 +184,6 @@ export default function Sidebar({
                </>
             )}
          </div>
-  
       </aside>
    )
 }
@@ -199,7 +198,7 @@ function EdgeButton({ edge, selected, onClick }) {
          whileTap={{ scale: 0.97 }}
          className={`w-full px-4 py-3 rounded-xl border text-sm font-medium flex justify-between items-center transition ${
             selected
-               ? 'bg-purple-100 border-purple-400 text-purple-700'
+               ? 'bg-primary-50 border-primary-700 text-purple-700'
                : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-purple-50 hover:border-purple-300'
          }`}
       >

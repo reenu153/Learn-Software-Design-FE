@@ -3,11 +3,14 @@ import { useEffect, useState } from 'react'
 import { fetchLessons } from '../api'
 
 const HomeScreen = () => {
-   const [coursePaths, setCoursePaths] = useState([])
+   const [coursePaths, setCoursePaths] = useState([]);
+   const [loading, setLoading] = useState(false)
 
    useEffect(() => {
+      setLoading(true)
       fetchLessons().then((data) => {
          setCoursePaths(data)
+         setLoading(false)
       })
    }, [])
 
@@ -32,7 +35,7 @@ const HomeScreen = () => {
                </p>
             </header>
 
-            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+           {loading?<div className='loader mx-auto'/>:( <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                {coursePaths.map((t, index) => (
                   <div
                      key={t.id}
@@ -45,7 +48,7 @@ const HomeScreen = () => {
                      <TopicCard topic={t} />
                   </div>
                ))}
-            </section>
+            </section>)}
          </div>
       </div>
    )

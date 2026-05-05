@@ -12,11 +12,12 @@ export default function ModulesPage() {
       try {
          fetchModulesWithProgress(topicId).then((data) => {
             setModules(data)
+            setLoading(false)
          })
       } catch (e) {
          console.error('Failed to fetch modules:', e)
       }
-      setLoading(false)
+      
    }, [topicId])
 
    return loading ? (
@@ -41,18 +42,9 @@ export default function ModulesPage() {
                   Complete modules to gain XP and unlock the next challenge.
                </p>
 
-               {/* <div className="mt-5 max-w-md">
-                  <div className="flex justify-between text-xs text-text-muted mb-1">
-                     <span>Topic Progress</span>
-                     <span>40%</span>
-                  </div>
-                  <div className="h-3 rounded-full bg-surface-muted overflow-hidden">
-                     <div className="h-full w-2/5 bg-gradient-to-r from-primary-500 to-secondary-500 animate-pulse" />
-                  </div>
-               </div> */}
             </div>
 
-            <div
+             {loading?<div className='loader mx-auto'/> :(<div
                className="
             grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3
             gap-6
@@ -70,7 +62,7 @@ export default function ModulesPage() {
                      <LessonCard module={l} />
                   </div>
                ))}
-            </div>
+            </div>)}
          </div>
       </div>
    )

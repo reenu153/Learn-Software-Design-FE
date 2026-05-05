@@ -30,8 +30,7 @@ export default function ClassNode({ id, data }) {
     copy[i] = value;
     update({ methods: copy });
   };
-  const targetStyle = { background: '#000000', }
-  const sourceStyle = { background: '#7C3AED', }
+
   return (
     <div>
       <motion.div
@@ -116,8 +115,7 @@ export default function ClassNode({ id, data }) {
         </div>
       </motion.div>
 
-      {/* HANDLES (unchanged) */}
-      {/* <Handle type="source" id="top-source" position={Position.Top} />
+      <Handle type="source" id="top-source" position={Position.Top} />
       <Handle type="target" id="top-target" position={Position.Top} />
 
       <Handle type="source" id="bottom-source" position={Position.Bottom} />
@@ -127,22 +125,8 @@ export default function ClassNode({ id, data }) {
       <Handle type="target" id="left-target" position={Position.Left} />
 
       <Handle type="source" id="right-source" position={Position.Right} />
-      <Handle type="target" id="right-target" position={Position.Right} /> */}
+      <Handle type="target" id="right-target" position={Position.Right} />
 
-      {/* TOP */}
-
-
-<Handle type="source" id="top-source" position={Position.Top} style={{ ...sourceStyle, left: '40%' }} />
-<Handle type="target" id="top-target" position={Position.Top} style={{ ...targetStyle, left: '60%' }} />
-
-<Handle type="source" id="bottom-source" position={Position.Bottom} style={{ ...sourceStyle, left: '40%' }} />
-<Handle type="target" id="bottom-target" position={Position.Bottom} style={{ ...targetStyle, left: '60%' }} />
-
-<Handle type="source" id="left-source" position={Position.Left} style={{ ...sourceStyle, top: '40%' }} />
-<Handle type="target" id="left-target" position={Position.Left} style={{ ...targetStyle, top: '60%' }} />
-
-<Handle type="source" id="right-source" position={Position.Right} style={{ ...sourceStyle, top: '40%' }} />
-<Handle type="target" id="right-target" position={Position.Right} style={{ ...targetStyle, top: '60%' }} />
     </div>
   );
 }
