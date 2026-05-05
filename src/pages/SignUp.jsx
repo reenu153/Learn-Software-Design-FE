@@ -64,6 +64,7 @@ export default function SignupPage() {
         >
           Sign Up
         </div>
+          <div className="text-center">Already have an account? <span className="font-bold cursor-pointer" onClick={()=> navigate('/login')}>Login</span></div>
         {loading && (<div className="loader mx-[150px]"/>)}
       </div>
     </div>

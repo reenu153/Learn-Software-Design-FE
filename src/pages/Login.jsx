@@ -8,11 +8,13 @@ export default function LoginPage() {
 
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 
   const handleLogin = async () => {
+    setLoading(true);
     const res = await fetch(`${BASE_URL}/login`, {
         method: "POST",
         headers: {
@@ -21,15 +23,15 @@ export default function LoginPage() {
       body: JSON.stringify({ username, password })
     });
 
-    if (!res.ok) {
+    const data = await res.json();
+
+    if (!data.access_token) {
       alert("Invalid credentials");
       return;
     }
 
-    const data = await res.json();
-
     login(data.access_token, username);
-
+    setLoading(false);
     navigate("/");
   };
 
@@ -66,6 +68,7 @@ export default function LoginPage() {
           Login
         </div>
         <div className="text-center">Do not have an account? <span className="font-bold cursor-pointer" onClick={()=> navigate('/signup')}>Sign up</span></div>
+        {loading && (<div className="loader mx-[150px]"/>)}
       </div>
     </div>
   );
