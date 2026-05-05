@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import { Loader } from "storybook/internal/components";
 
 export default function SignupPage() {
   const navigate = useNavigate();
@@ -8,24 +9,31 @@ export default function SignupPage() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
   const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const handleSignup = async () => {
+    setLoading(true);
     const res = await fetch(`${BASE_URL}/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password, role: "student" })
     });
 
-    if (!res.ok) {
-      alert("Signup failed");
+    const data = await res.json();
+    
+    if(!data.username) {
+      alert(data.detail || "Signup failed");
+      setLoading(false);
       return;
     }
 
-    const data = await res.json();
 
-    // auto login after signup
-    login(data.token, data.user);
+    localStorage.setItem("token",data.access_token);
+    localStorage.setItem("user", JSON.stringify(data.username));
+
+    setLoading(false);
 
     navigate("/");
   };
@@ -56,6 +64,7 @@ export default function SignupPage() {
         >
           Sign Up
         </div>
+        {loading && (<div className="loader mx-[150px]"/>)}
       </div>
     </div>
   );
