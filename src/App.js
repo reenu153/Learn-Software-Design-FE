@@ -8,7 +8,6 @@ import ModulesPage from './pages/ModulesPage'
 import QuestionsByModulePage from './pages/QuestionsByModulePage'
 import Header from './components/Header'
 import Submissions from './components/Submissions'
-import SolveQuestion from './pages/SolveQuestion'
 import SignupPage from './pages/SignUp'
 import SolveQuestionDragDrop from './pages/SolveQuestionDragDrop'
 
@@ -16,7 +15,7 @@ const App = () => {
    const location = useLocation()
    return (
       <div className="w-screen h-screen">
-         {location.pathname !== '/login' && <Header />}
+         {(location.pathname !== '/login' && location.pathname!== '/signup') && <Header />}
          <Routes>
             <Route
                path="/"

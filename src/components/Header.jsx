@@ -7,7 +7,7 @@ export default function Header() {
 
   const isHome = location.pathname === "/";
 
-  const user = JSON.parse(localStorage.getItem("user")) || { name: "User" };
+  const user = JSON.parse(localStorage.getItem("user") || { name: "User" });
 
   const handleBack = () => {
     navigate(-1);
