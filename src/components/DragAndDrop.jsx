@@ -45,7 +45,7 @@ export default function DragAndDrop({
    const flowRef = useRef(null)
 
    useState(()=>{
-      if(initialGraph?.nodes?.length){
+      if(initialGraph?.nodes){
          setNodes(initialGraph.nodes)
          setEdges(initialGraph.edges)
       }

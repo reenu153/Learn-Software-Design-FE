@@ -89,7 +89,8 @@ export default function SolveQuestionDragDrop() {
 
          <div className="flex gap-4">
             <DragAndDrop
-               initialGraph={question?.diagram_to_fill||{}}
+               key={question?.id}
+               initialGraph={question?.diagram_to_fill || null}
                setReactFlowInstance={setReactFlowInstance}
                activeTab={activeTab}
                setActiveTab={setActiveTab}
