@@ -23,6 +23,7 @@ export default function DragAndDrop({
    setReactFlowInstance,
    activeTab,
    setActiveTab,
+   initialGraph
 }) {
    const edgeTypes = {
       uml: UMLEdge,
@@ -42,6 +43,13 @@ export default function DragAndDrop({
    const [edges, setEdges, onEdgesChange] = useEdgesState([])
 
    const flowRef = useRef(null)
+
+   useState(()=>{
+      if(initialGraph?.nodes?.length){
+         setNodes(initialGraph.nodes)
+         setEdges(initialGraph.edges)
+      }
+   },[initialGraph])
 
    const onDrop = useCallback(
       (event) => {
