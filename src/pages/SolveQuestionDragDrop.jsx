@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import mermaid from 'mermaid'
 import { useParams } from 'react-router-dom'
 import { evaluateAnswer2, fetchQuestionById } from '../api'
-import formatFeedbackToJSX from '../utils/formatFeedback'
+import formatFeedback from '../utils/formatter'
 import DragAndDrop from '../components/DragAndDrop'
 
 export default function SolveQuestionDragDrop() {
@@ -131,7 +131,7 @@ export default function SolveQuestionDragDrop() {
                <div>
                   <strong>Feedback:</strong>
                   <p className="mt-1 whitespace-pre-line">
-                     {formatFeedbackToJSX(feedback.feedback)}
+                     {formatFeedback(feedback.feedback)}
                   </p>
                </div>
             </div>

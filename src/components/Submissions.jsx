@@ -13,6 +13,12 @@ export default function Submissions() {
      })
   }, [questionId])
 
+  const formatDate = (iso) =>
+    new Date(iso).toLocaleString("en-US", {
+      month: "short", day: "numeric", year: "numeric",
+      hour: "numeric", minute: "2-digit", hour12: true
+    })
+
   return (
     <div className="p-4 flex gap-4">
 
@@ -29,7 +35,7 @@ export default function Submissions() {
           >
             <div className="flex justify-between">
               <span>
-                {new Date(item.created_at).toLocaleTimeString()}
+                {formatDate(item.created_at)}
               </span>
 
               <span
