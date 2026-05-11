@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
    ReactFlow,
    Background,
@@ -44,12 +44,27 @@ export default function DragAndDrop({
 
    const flowRef = useRef(null)
 
-   useState(()=>{
-      if(initialGraph?.nodes){
-         setNodes(initialGraph.nodes)
-         setEdges(initialGraph.edges)
+   useEffect(() => {
+      if (initialGraph?.nodes) {
+        setNodes(
+          initialGraph.nodes.map((n) => ({
+            ...n,
+            data: {
+              ...n.data,
+              onChange: (id, changes) =>
+                setNodes((nds) =>
+                  nds.map((node) =>
+                    node.id === id
+                      ? { ...node, data: { ...changes, onChange: node.data.onChange } }
+                      : node
+                  )
+                ),
+            },
+          }))
+        )
+        setEdges(initialGraph.edges ?? [])
       }
-   },[initialGraph])
+    }, [initialGraph])
 
    const onDrop = useCallback(
       (event) => {
