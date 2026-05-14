@@ -46,8 +46,6 @@ export default function Header() {
             )}
          </div>
 
-         {/* Center: App Name */}
-         <div className="text-xl font-bold">UML Academy</div>
 
          {/* Right: User + Logout */}
          <div className="flex items-center gap-3">

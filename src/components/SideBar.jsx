@@ -5,6 +5,7 @@ export default function Sidebar({
    setSelectedEdgeType,
    activeTab,
    setActiveTab,
+   sidebarOpen
 }) {
    const onNodeDragStart = (event, nodeType) => {
       event.stopPropagation()
@@ -31,8 +32,7 @@ export default function Sidebar({
    ]
 
    return (
-      <aside className="w-[270px] bg-white border-r border-gray-200 shadow-sm flex flex-col h-full">
-         {/* HEADER */}
+      <aside className={`${sidebarOpen ? 'w-[270px]' : 'w-0'} transition-all duration-300 overflow-hidden border-r border-gray-200 shadow-sm flex flex-col h-full`}>
          <div className="p-5 border-b border-gray-100">
             <h2 className="text-lg font-bold text-gray-800">UML Toolbox</h2>
             <p className="text-sm text-gray-500 mt-1">

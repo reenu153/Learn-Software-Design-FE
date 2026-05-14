@@ -7,7 +7,7 @@ import {
    useNodesState,
    useEdgesState,
    reconnectEdge,
-   ConnectionMode
+   ConnectionMode,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import Sidebar from './SideBar'
@@ -18,12 +18,13 @@ import InterfaceNode from './custom nodes/InterfaceNode'
 import ComponentNode from './custom nodes/ComponentNode'
 import { InterfacePortNode } from './custom nodes/IntefacePort'
 import { DatabaseNode } from './custom nodes/Database'
+import { ShoworHideComp } from './ShoworHideComp'
 
 export default function DragAndDrop({
    setReactFlowInstance,
    activeTab,
    setActiveTab,
-   initialGraph
+   initialGraph,
 }) {
    const edgeTypes = {
       uml: UMLEdge,
@@ -41,30 +42,37 @@ export default function DragAndDrop({
 
    const [nodes, setNodes, onNodesChange] = useNodesState([])
    const [edges, setEdges, onEdgesChange] = useEdgesState([])
+   const [sidebarOpen, setSidebarOpen] = useState(true)
 
    const flowRef = useRef(null)
 
    useEffect(() => {
       if (initialGraph?.nodes) {
-        setNodes(
-          initialGraph.nodes.map((n) => ({
-            ...n,
-            data: {
-              ...n.data,
-              onChange: (id, changes) =>
-                setNodes((nds) =>
-                  nds.map((node) =>
-                    node.id === id
-                      ? { ...node, data: { ...changes, onChange: node.data.onChange } }
-                      : node
-                  )
-                ),
-            },
-          }))
-        )
-        setEdges(initialGraph.edges ?? [])
+         setNodes(
+            initialGraph.nodes.map((n) => ({
+               ...n,
+               data: {
+                  ...n.data,
+                  onChange: (id, changes) =>
+                     setNodes((nds) =>
+                        nds.map((node) =>
+                           node.id === id
+                              ? {
+                                   ...node,
+                                   data: {
+                                      ...changes,
+                                      onChange: node.data.onChange,
+                                   },
+                                }
+                              : node
+                        )
+                     ),
+               },
+            }))
+         )
+         setEdges(initialGraph.edges ?? [])
       }
-    }, [initialGraph])
+   }, [initialGraph])
 
    const onDrop = useCallback(
       (event) => {
@@ -115,12 +123,11 @@ export default function DragAndDrop({
    const onConnect = useCallback(
       (connection) => {
          let source, target, sourceHandle, targetHandle
-  
- 
-           source = connection.target
-           target = connection.source
-           sourceHandle = connection.targetHandle?.replace('target', 'source')
-           targetHandle = connection.sourceHandle?.replace('source', 'target')
+
+         source = connection.target
+         target = connection.source
+         sourceHandle = connection.targetHandle?.replace('target', 'source')
+         targetHandle = connection.sourceHandle?.replace('source', 'target')
 
          setEdges((eds) =>
             addEdge(
@@ -130,7 +137,7 @@ export default function DragAndDrop({
                   sourceHandle,
                   targetHandle,
                   type: 'uml',
-                      style: { stroke: '#000000', strokeWidth: 2 },
+                  style: { stroke: '#000000', strokeWidth: 2 },
 
                   data: {
                      umlType: selectedEdgeType,
@@ -145,13 +152,17 @@ export default function DragAndDrop({
    )
 
    return (
-      <div className="flex w-screen">
-         <Sidebar
-            selectedEdgeType={selectedEdgeType}
-            setSelectedEdgeType={setSelectedEdgeType}
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-         />
+      <div className="flex border rounded-lg h-full">
+         <div className="relative">
+            <Sidebar
+               sidebarOpen={sidebarOpen}
+               selectedEdgeType={selectedEdgeType}
+               setSelectedEdgeType={setSelectedEdgeType}
+               activeTab={activeTab}
+               setActiveTab={setActiveTab}
+            />
+           <ShoworHideComp open={sidebarOpen} setOpen={setSidebarOpen} /> 
+         </div>
          <div ref={flowRef} className="w-full">
             <ReactFlow
                onInit={setReactFlowInstance}

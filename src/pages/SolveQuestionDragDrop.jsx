@@ -2,13 +2,15 @@ import React, { useEffect, useRef, useState } from 'react'
 import mermaid from 'mermaid'
 import { useParams } from 'react-router-dom'
 import { evaluateAnswer2, fetchQuestionById } from '../api'
-import formatFeedback from '../utils/formatter'
 import DragAndDrop from '../components/DragAndDrop'
+import { FeedbackContent } from '../components/Feedback'
+import { ShoworHideComp } from '../components/ShoworHideComp'
 
 export default function SolveQuestionDragDrop() {
    const [reactFlowInstance, setReactFlowInstance] = useState(null)
    const [loading, setLoading] = useState(false)
    const [feedback, setFeedback] = useState({})
+   const [showFeedback, setShowFeedback] = useState(true)
    const [activeTab, setActiveTab] = useState('class')
    const [question, setQuestion] = useState([])
    const questionRef = useRef(null)
@@ -58,6 +60,7 @@ export default function SolveQuestionDragDrop() {
          await new Promise((res) => setTimeout(res, 1500))
          evaluateAnswer2(questionId, payload).then((result) => {
             setFeedback(result)
+            setShowFeedback(true)
             setLoading(false)
          })
       } catch (e) {
@@ -82,62 +85,52 @@ export default function SolveQuestionDragDrop() {
                className="w-full flex items-center justify-center"
                ref={questionRef}
             />
-            {question?.task_description && <p style={{ whiteSpace: 'pre-wrap' }}>{question?.task_description?.replace(
-                  /\\n/g,
-                  '\n')}</p>}
+            {question?.task_description && (
+               <p style={{ whiteSpace: 'pre-wrap' }}>
+                  {question?.task_description?.replace(/\\n/g, '\n')}
+               </p>
+            )}
          </div>
 
-         <div className="flex gap-4">
-            <DragAndDrop
-               key={question?.id}
-               initialGraph={question?.diagram_to_fill || null}
-               setReactFlowInstance={setReactFlowInstance}
-               activeTab={activeTab}
-               setActiveTab={setActiveTab}
-            />
-         </div>
-
-         <div
-            onClick={handleSubmit}
-            disabled={loading}
-            className="w-fit px-4 py-2 cursor-pointer bg-primary-300 rounded-lg hover:bg-blue-700 disabled:opacity-50"
-         >
-            {loading ? 'Evaluating...' : 'Submit'}
-         </div>
-
-         {loading && (
-            <div className="text-blue-500 animate-pulse">
-               Generating feedback...
-            </div>
-         )}
-
-         {feedback?.feedback && (
-            <div className="p-4 border rounded-lg bg-gray-50">
-               <div className="mb-2">
-                  <strong>Status:</strong>{' '}
-                  <span
-                     className={
-                        feedback.passed ? 'text-green-600' : 'text-red-500'
-                     }
-                  >
-                     {feedback.passed ? 'Passed' : 'Failed'}
-                  </span>
+         <div className="flex gap-4 w-[96vw] h-[900px]">
+            <div className="w-full">
+               <DragAndDrop
+                  key={question?.id}
+                  initialGraph={question?.diagram_to_fill || null}
+                  setReactFlowInstance={setReactFlowInstance}
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+               />
+               <div
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="w-[150px] mt-6 px-4 py-2 cursor-pointer bg-primary-300 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+               >
+                  {loading ? 'Evaluating...' : 'Submit Solution'}
                </div>
 
-               {feedback?.grade && (
-                  <div className="mb-2">
-                     <strong>Grade:</strong> {feedback.grade}
+               {loading && (
+                  <div className="text-blue-500 animate-pulse">
+                     Generating feedback...
                   </div>
                )}
-
-               <div>
-                  <strong>Feedback:</strong>
-                  <p className="mt-1 whitespace-pre-line">
-                     {formatFeedback(feedback.feedback)}
-                  </p>
-               </div>
             </div>
-         )}
+
+            {feedback?.feedback && (
+               <div className="relative flex">
+               <ShoworHideComp open={showFeedback} setOpen={setShowFeedback} isLeftSide={false} />
+             
+               <div
+                 className="overflow-hidden "
+                 style={{ width: showFeedback ? '100%' : '0px' }}
+               >
+                 <div className="w-[100%] min-w-full h-full overflow-auto">
+                   <FeedbackContent feedback={feedback} />
+                 </div>
+               </div>
+             </div>
+            )}
+         </div>
       </div>
    )
 }
