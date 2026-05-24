@@ -14,8 +14,7 @@ import ComponentNode from './custom nodes/ComponentNode'
 import { InterfacePortNode } from './custom nodes/IntefacePort'
 import { DatabaseNode } from './custom nodes/Database'
 import Markers from "./custom edges/Markers";
-
-import formatFeedback from "../utils/formatter";
+import { FeedbackContent } from "./Feedback";
 
 export function SubmissionDetail({ submission }) {
   const edgeTypes = {
@@ -122,15 +121,7 @@ export function SubmissionDetail({ submission }) {
         </div>
 
         <div className="border rounded bg-white p-4 shadow-sm">
-          <h3 className="font-semibold text-md mb-3">
-            Feedback
-          </h3>
-
-          <div className="text-gray-700 whitespace-pre-line">
-            {formatFeedback(
-              submission?.ai_feedback
-            ) || "No feedback available"}
-          </div>
+          <FeedbackContent feedback={{feedback:submission?.ai_feedback, passed:submission?.passed, submission_id:submission?.id}} />
         </div>
 
        

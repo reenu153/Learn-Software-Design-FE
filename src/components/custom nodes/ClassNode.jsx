@@ -61,14 +61,14 @@ export default function ClassNode({ id, data }) {
                      <div key={i} className="flex items-center gap-1">
                         <input
                            key={i}
-                           value={attr}
+                           defaultValue={attr}
                            placeholder="+ attribute: type"
                            onKeyDown={(e) => {
                               if (e.key === 'Enter') {
                                 e.preventDefault()
                                 update({
-                                 attributes: [...attributes, ''],
-                              })
+                        attributes: [...attributes, ''],
+                     })
                               }
                             }}
                            onChange={(e) => updateAttribute(i, e.target.value)}
@@ -121,7 +121,8 @@ export default function ClassNode({ id, data }) {
                   {methods?.map((method, i) => (
                      <div key={i} className="flex items-center">
                         <input
-                           value={method}
+                           key={i}
+                           defaultValue={method}
                            placeholder="+ method(): type"
                            onChange={(e) => updateMethod(i, e.target.value)}
                            onKeyDown={(e) => {

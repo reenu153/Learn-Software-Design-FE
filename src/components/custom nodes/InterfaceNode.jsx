@@ -57,7 +57,7 @@ export default function InterfaceNode({ id, data }) {
                {methods?.map((method, i) => (
                   <div key={i} className="flex items-center gap-1">
                      <input
-                        value={method}
+                        defaultValue={method}
                         placeholder="+ method(): type"
                         onKeyDown={(e) => {
                            if (e.key === 'Enter') {

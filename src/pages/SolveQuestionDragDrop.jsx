@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import mermaid from 'mermaid'
 import { useParams } from 'react-router-dom'
-import { evaluateAnswer2, fetchQuestionById } from '../api'
+import { evaluateAnswer, fetchQuestionById } from '../api'
 import DragAndDrop from '../components/DragAndDrop'
 import { FeedbackContent } from '../components/Feedback'
 import { ShoworHideComp } from '../components/ShoworHideComp'
@@ -58,7 +58,7 @@ export default function SolveQuestionDragDrop() {
 
       try {
          await new Promise((res) => setTimeout(res, 1500))
-         evaluateAnswer2(questionId, payload).then((result) => {
+         evaluateAnswer(questionId, payload).then((result) => {
             setFeedback(result)
             setShowFeedback(true)
             setLoading(false)
@@ -104,7 +104,7 @@ export default function SolveQuestionDragDrop() {
                <div
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="w-[150px] mt-6 px-4 py-2 cursor-pointer bg-primary-300 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                  className="w-[150px] mt-6 px-4 py-2 cursor-pointer bg-primary-300 rounded-lg hover:bg-primary-500 disabled:opacity-50"
                >
                   {loading ? 'Evaluating...' : 'Submit Solution'}
                </div>

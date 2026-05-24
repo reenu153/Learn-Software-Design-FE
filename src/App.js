@@ -50,7 +50,6 @@ const App = () => {
                path="/module/:questionId/editor"
                element={
                   <ProtectedRoute>
-                     {/* <SolveQuestion /> */}
                      <SolveQuestionDragDrop />
                   </ProtectedRoute>
                }

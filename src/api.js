@@ -78,37 +78,7 @@ export const fetchQuestionById = async (questionId) => {
    }
 }
 
-export const evaluateAnswer = async (questionId, solution) => {
-   const token = localStorage.getItem('token')
-   try {
-      const response = await fetch(`${API_BASE_URL}/evaluate`, {
-         method: 'POST',
-         headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-         },
-         body: JSON.stringify({ question_id: questionId, solution }),
-      })
-
-      if (response.status === 401) {
-         localStorage.removeItem('token')
-         window.location.href = '/login'
-         return
-      }
-
-      if (!response.ok) {
-         throw new Error(`Failed to evaluate answer: ${response.statusText}`)
-      }
-
-      const data = await response.json()
-      return data
-   } catch (error) {
-      console.error('Error evaluating answer:', error)
-      throw error
-   }
-}
-
-export const evaluateAnswer2 = async (questionId, payload) => {
+export const evaluateAnswer = async (questionId, payload) => {
    const token = localStorage.getItem('token')
    try {
       const response = await fetch(`${API_BASE_URL}/evaluate-diagram`, {
@@ -218,3 +188,28 @@ export const fetchUserDetails = async () => {
       throw error
    }
 }
+
+
+export const postMarkHintTaken = async (submissionId) => {
+   const token = localStorage.getItem('token')
+   try {
+      const response = await fetch(`${API_BASE_URL}/submissions/took-hint`, {
+         method: 'POST',
+         body: JSON.stringify({ submission_id: submissionId }),
+         headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+         },
+      })
+      if (response.status === 401) {
+         localStorage.removeItem('token')
+         window.location.href = '/login'
+         return
+      }
+      const data = await response.json()
+      return data
+   } catch (error) {
+      console.error('Error updating hint taken:', error)
+      throw error
+   }
+ }

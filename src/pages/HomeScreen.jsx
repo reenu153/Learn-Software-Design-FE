@@ -1,13 +1,19 @@
 import TopicCard from '../components/TopicCard'
 import { useEffect, useState } from 'react'
 import { fetchLessons } from '../api'
+import { useNavigate } from 'react-router-dom';
 
 const HomeScreen = () => {
    const [coursePaths, setCoursePaths] = useState([]);
    const [loading, setLoading] = useState(false)
 
+   const navigate = useNavigate()
+
    useEffect(() => {
       setLoading(true)
+      if (!localStorage.getItem('token')) {
+         navigate('/login')
+      }
       fetchLessons().then((data) => {
          setCoursePaths(data)
          setLoading(false)
