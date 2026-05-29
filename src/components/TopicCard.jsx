@@ -12,17 +12,15 @@ export default function TopicCard({ topic }) {
         transition-all duration-300
         bg-gradient-to-br from-surface to-primary-50
         border border-primary-200 min-h-[200px]
+        hover:-translate-y-1 hover:shadow-glow hover:scale-[1.02] cursor-pointer
 
-        ${topic.unlocked
-          ? "hover:-translate-y-1 hover:shadow-glow hover:scale-[1.02] cursor-pointer"
-          : "cursor-not-allowed opacity-60 grayscale"}
       `}
     >
 
       <div className="flex items-center justify-between">
         <h3 className={`
           text-xl font-extrabold
-          ${topic.unlocked ? "text-primary-700" : "text-gray-400"}
+         text-primary-700
         `}>
           {topic.title}
         </h3>
