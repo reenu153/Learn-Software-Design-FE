@@ -104,7 +104,7 @@ export default function SolveQuestionDragDrop() {
                <div
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="w-[150px] mt-6 px-4 py-2 cursor-pointer bg-primary-300 rounded-lg hover:bg-primary-500 disabled:opacity-50"
+                  className="w-[150px] mt-6 px-4 py-2 cursor-pointer rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 disabled:opacity-50"
                >
                   {loading ? 'Evaluating...' : 'Submit Solution'}
                </div>

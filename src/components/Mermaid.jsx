@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import mermaid from 'mermaid'
 
 export default function MermaidPage({code, setCode}) {

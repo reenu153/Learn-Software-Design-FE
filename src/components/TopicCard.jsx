@@ -8,19 +8,18 @@ export default function TopicCard({ topic }) {
       role="button"
       onClick={() => navigate(`/topic/${topic.id}`)}
       className={`
-        relative p-6 rounded-2xl text-primary-500
-        transition-all duration-300
-        bg-gradient-to-br from-surface to-primary-50
+        relative p-6 rounded-2xl
+        transition-all duration-300 bg-white
         border border-primary-200 min-h-[200px]
         hover:-translate-y-1 hover:shadow-glow hover:scale-[1.02] cursor-pointer
 
       `}
     >
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center text-lg font-extrabold
+        text-gray-400 justify-between">
         <h3 className={`
           text-xl font-extrabold
-         text-primary-700
         `}>
           {topic.title}
         </h3>

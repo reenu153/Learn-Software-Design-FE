@@ -49,7 +49,7 @@ export default function Sidebar({
                      onClick={() => setActiveTab(tab)}
                      className={`flex-1 py-2 text-sm font-semibold rounded-lg transition ${
                         activeTab === tab
-                           ? 'bg-white shadow text-purple-700'
+                           ? 'bg-white shadow text-gray-500'
                            : 'text-gray-500'
                      }`}
                   >

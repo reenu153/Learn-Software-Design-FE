@@ -22,11 +22,11 @@ const HomeScreen = () => {
 
    return (
       <div>
-         <div className="min-h-screen p-10 bg-gradient-to-br from-primary-100 via-secondary-300 to-primary-500">
+         <div className="min-h-screen p-10 bg-gradient-to-br from-primary-100 via-secondary-300 to-primary-300">
             <header className="mb-10 text-center  text-text">
                <h1
                   className="
-    text-4xl sm:text-5xl font-extrabold
+    text-4xl font-extrabold
     bg-gradient-to-r from-primary-600 to-secondary-500
     bg-clip-text text-transparent
     tracking-tight

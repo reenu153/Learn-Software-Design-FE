@@ -14,7 +14,7 @@ import SolveQuestionDragDrop from './pages/SolveQuestionDragDrop'
 const App = () => {
    const location = useLocation()
    return (
-      <div className="w-screen h-screen">
+      <div className="h-screen">
          {(location.pathname !== '/login' && location.pathname!== '/signup') && <Header />}
          <Routes>
             <Route

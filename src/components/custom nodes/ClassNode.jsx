@@ -105,7 +105,7 @@ export default function ClassNode({ id, data }) {
                         attributes: [...attributes, ''],
                      })
                   }
-                  className="mt-3 w-full text-sm py-2 rounded-lg bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100 transition font-medium"
+                  className="mt-3 w-full text-sm py-2 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition font-medium"
                >
                   + Add Attribute
                </button>

@@ -28,24 +28,22 @@ export default function Header() {
    return (
       <div className="w-full flex items-center justify-between px-4 py-3 bg-white shadow-md sticky top-0 z-50">
          {/* Left: Back or Home */}
-         <div>
-            {isHome ? (
-               <button
-                  onClick={handleHome}
-                  className="px-3 py-1 rounded-lg bg-gray-100 hover:bg-gray-200"
-               >
-                  🏠 Home
-               </button>
-            ) : (
+         <div className="flex items-center justify-center gap-5 px-3">
+            {!isHome && (
                <button
                   onClick={handleBack}
-                  className="px-3 py-1 rounded-lg bg-gray-100 hover:bg-gray-200"
+                  className="text-[23px] font-semibold rounded-lg bg-gray-100 hover:bg-gray-200"
                >
-                  ← Back
+                  ←
                </button>
             )}
+            <button
+               onClick={handleHome}
+               className="rounded-lg pb-1 text-[25px] font-bold bg-gray-100 hover:bg-gray-200"
+            >
+               𖠿
+            </button>
          </div>
-
 
          {/* Right: User + Logout */}
          <div className="flex items-center gap-3">
