@@ -8,9 +8,9 @@ export default function TopicCard({ topic }) {
       role="button"
       onClick={() => navigate(`/topic/${topic.id}`)}
       className={`
-        relative p-6 rounded-2xl
+        relative p-6 rounded-2xl w-[350px]
         transition-all duration-300 bg-white
-        border border-primary-200 min-h-[200px]
+        border border-primary-200 h-[200px]
         hover:-translate-y-1 hover:shadow-glow hover:scale-[1.02] cursor-pointer
 
       `}
@@ -31,7 +31,7 @@ export default function TopicCard({ topic }) {
       </p>
         <div>
         <div className="mt-4 text-xs font-semibold text-secondary-500">
-          ▶ Start Lesson
+          ▶ View Modules
         </div>
         </div>
     </div>

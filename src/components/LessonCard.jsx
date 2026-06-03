@@ -9,7 +9,7 @@ export default function moduleCard({ module }) {
          className={`
     relative p-5 rounded-2xl border
     transition-all duration-300
-    bg-gradient-to-br from-surface to-secondary-50
+    bg-white
     shadow-card cursor-pointer min-w-[400px] min-h-[180px]
   `}
       >

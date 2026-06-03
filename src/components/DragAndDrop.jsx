@@ -152,7 +152,7 @@ export default function DragAndDrop({
    )
 
    return (
-      <div className="flex border rounded-lg h-full">
+      <div className="flex border rounded-lg h-[860px]">
          <div className="relative">
             <Sidebar
                sidebarOpen={sidebarOpen}

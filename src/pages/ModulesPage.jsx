@@ -25,7 +25,7 @@ export default function ModulesPage() {
          <div className="loader"></div>
       </div>
    ) : (
-      <div className="min-h-screen bg-gradient-to-br from-primary-100 via-secondary-300 to-primary-300">
+      <div className="min-h-screen">
          <div className="container mx-auto p-6">
             <div className="mb-8">
                <h2

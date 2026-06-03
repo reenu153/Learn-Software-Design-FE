@@ -103,7 +103,8 @@ export default function Sidebar({
                      <div className="py-3 border-t border-gray-100 text-xs text-gray-400">
                         Tip: To connect nodes, first select a relationship type.
                         Then drag from a handle (●) on one node to a handle on
-                        another node
+                        another node.
+                        To delete a connection, select the relationship and press the Delete/Backspace key.
                      </div>
 
                      <div className="space-y-3">

@@ -22,7 +22,7 @@ const HomeScreen = () => {
 
    return (
       <div>
-         <div className="min-h-screen p-10 bg-gradient-to-br from-primary-100 via-secondary-300 to-primary-300">
+         <div className="min-h-screen p-10">
             <header className="mb-10 text-center  text-text">
                <h1
                   className="
@@ -35,13 +35,13 @@ const HomeScreen = () => {
                   Software Design Academy
                </h1>
 
-               <p className="mt-3 text-text-muted text-sm sm:text-base max-w-xl mx-auto">
+               <p className="mt-3 text-text-white text-sm sm:text-base max-w-xl mx-auto">
                   Learn software design through interactive, game-like
                   challenges.
                </p>
             </header>
 
-           {loading?<div className='loader mx-auto'/>:( <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+           {loading?<div className='loader mx-auto'/>:( <section className="flex flex-wrap items-center justify-center gap-5">
                {coursePaths.map((t, index) => (
                   <div
                      key={t.id}

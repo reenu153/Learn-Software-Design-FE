@@ -71,7 +71,7 @@ export default function SolveQuestionDragDrop() {
 
    return (
       <div className="p-6 flex flex-col gap-4">
-         <div className="bg-gray-100 p-4 rounded-lg">
+         <div className="bg-gray-100 pb-4 rounded-lg">
             <div className="flex justify-between items-center gap-2 mb-4">
                <h2 className="font-bold text-lg mb-2">Question</h2>
             </div>
@@ -92,7 +92,7 @@ export default function SolveQuestionDragDrop() {
             )}
          </div>
 
-         <div className="flex gap-4 w-[96vw] h-[900px]">
+         <div className="flex gap-4 w-[96vw] h-[900px] mb-5">
             <div className="w-full">
                <DragAndDrop
                   key={question?.id}
@@ -104,16 +104,10 @@ export default function SolveQuestionDragDrop() {
                <div
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="w-[150px] mt-6 px-4 py-2 cursor-pointer rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 disabled:opacity-50"
+                  className="w-fit my-6 px-4 py-2 cursor-pointer rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 disabled:opacity-50"
                >
-                  {loading ? 'Evaluating...' : 'Submit Solution'}
+                  {loading ? 'Evaluating and generating feedback..' : 'Submit Solution'}
                </div>
-
-               {loading && (
-                  <div className="text-blue-500 animate-pulse">
-                     Generating feedback...
-                  </div>
-               )}
             </div>
 
             {feedback?.feedback && (
