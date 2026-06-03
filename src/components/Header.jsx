@@ -61,9 +61,9 @@ export default function Header() {
 
             <button
                onClick={handleLogout}
-               className="hidden sm:block text-sm font-medium"
+               className="hidden sm:block font-bold text-sm"
             >
-               Logout
+               ➜] Logout
             </button>
          </div>
       </div>

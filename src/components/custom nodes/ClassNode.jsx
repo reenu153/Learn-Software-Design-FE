@@ -12,11 +12,14 @@ export default function ClassNode({ id, data }) {
    }
 
    const remove = (key, index) =>
-      data?.onChange?.(id, {
+    {console.log("Removing", key, index);
+      console.log("Before:", data[key]);
+      console.log(data[key].filter((_, i) => i !== index))
+        data?.onChange?.(id, {
          ...data,
          [key]: data[key].filter((_, i) => i !== index),
       })
-
+   }
    const updateName = (value) => update({ name: value })
 
    const updateAttribute = (i, value) => {
@@ -58,9 +61,8 @@ export default function ClassNode({ id, data }) {
 
                <div className="space-y-2">
                   {attributes?.map((attr, i) => (
-                     <div key={i} className="flex items-center gap-1">
+                     <div key={`attr-${i}-${attr}`} className="flex items-center gap-1">
                         <input
-                           key={i}
                            defaultValue={attr}
                            placeholder="+ attribute: type"
                            onKeyDown={(e) => {
@@ -119,9 +121,8 @@ export default function ClassNode({ id, data }) {
 
                <div className="space-y-2">
                   {methods?.map((method, i) => (
-                     <div key={i} className="flex items-center">
+                     <div key={`method-${i}-${method}`} className="flex items-center">
                         <input
-                           key={i}
                            defaultValue={method}
                            placeholder="+ method(): type"
                            onChange={(e) => updateMethod(i, e.target.value)}
