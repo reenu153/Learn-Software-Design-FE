@@ -12,9 +12,7 @@ export default function ClassNode({ id, data }) {
    }
 
    const remove = (key, index) =>
-    {console.log("Removing", key, index);
-      console.log("Before:", data[key]);
-      console.log(data[key].filter((_, i) => i !== index))
+    {
         data?.onChange?.(id, {
          ...data,
          [key]: data[key].filter((_, i) => i !== index),
@@ -61,7 +59,7 @@ export default function ClassNode({ id, data }) {
 
                <div className="space-y-2">
                   {attributes?.map((attr, i) => (
-                     <div key={`attr-${i}-${attr}`} className="flex items-center gap-1">
+                     <div key={i} className="flex items-center gap-1">
                         <input
                            defaultValue={attr}
                            placeholder="+ attribute: type"
@@ -121,7 +119,7 @@ export default function ClassNode({ id, data }) {
 
                <div className="space-y-2">
                   {methods?.map((method, i) => (
-                     <div key={`method-${i}-${method}`} className="flex items-center">
+                     <div key={i} className="flex items-center">
                         <input
                            defaultValue={method}
                            placeholder="+ method(): type"

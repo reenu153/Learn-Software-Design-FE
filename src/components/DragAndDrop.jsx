@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import {
    ReactFlow,
    Background,
@@ -26,9 +26,6 @@ export default function DragAndDrop({
    setActiveTab,
    initialGraph,
 }) {
-   const edgeTypes = {
-      uml: UMLEdge,
-   }
 
    const nodeTypes = {
       classNode: ClassNode,
@@ -39,12 +36,22 @@ export default function DragAndDrop({
    }
 
    const [selectedEdgeType, setSelectedEdgeType] = useState('default')
+   const [selectedEdge, setSelectedEdge] = useState(null);
 
    const [nodes, setNodes, onNodesChange] = useNodesState([])
    const [edges, setEdges, onEdgesChange] = useEdgesState([])
    const [sidebarOpen, setSidebarOpen] = useState(true)
 
    const flowRef = useRef(null)
+
+   const edgeTypes = useMemo(() => ({
+      uml: (props) => (
+        <UMLEdge
+          {...props}
+          selectedEdge={selectedEdge}
+        />
+      ),
+    }), [selectedEdge]); 
 
    useEffect(() => {
       if (initialGraph?.nodes) {
@@ -178,8 +185,7 @@ export default function DragAndDrop({
                fitView
                elementsSelectable
                connectionMode={ConnectionMode.Loose}
-               onReconnect={onReconnect}
-               edgesReconnectable
+               onEdgeClick={(_, edge) => setSelectedEdge(edge.id)}
                edgesFocusable
                defaultEdgeOptions={{
                   animated: true,

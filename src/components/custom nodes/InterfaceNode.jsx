@@ -55,7 +55,7 @@ export default function InterfaceNode({ id, data }) {
             {/* METHODS */}
             <div className="p-3 space-y-2">
                {methods?.map((method, i) => (
-                  <div key={`method-${i}-${method}`} className="flex items-center gap-1">
+                  <div key={i} className="flex items-center gap-1">
                      <input
                         defaultValue={method}
                         placeholder="+ method(): type"

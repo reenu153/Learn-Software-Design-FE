@@ -25,6 +25,7 @@ export function UMLEdge(props) {
     sourcePosition,
     targetPosition,
     data,
+    selectedEdge
   } = props;
 
   const [edgePath] = getSmoothStepPath({
@@ -38,7 +39,7 @@ export function UMLEdge(props) {
 
   const type = data?.umlType;
   const flowEnabled = data?.flow === true;
-
+  const isSelected = selectedEdge === id;
   const edgeStyleByType = {
     inheritance: {
         strokeDasharray: "0",
@@ -93,8 +94,8 @@ export function UMLEdge(props) {
         id={id}
         path={edgePath}
         style={{
-          stroke: "#111",
-          strokeWidth: 2,
+          stroke: isSelected ? "#7C3AED" : "#111",
+          strokeWidth: isSelected ? 3 : 2,
           animation: "none",
           strokeDasharray: "none",
           ...edgeStyleByType[type] || {},
