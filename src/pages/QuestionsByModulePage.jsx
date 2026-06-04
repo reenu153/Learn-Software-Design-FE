@@ -23,7 +23,7 @@ const QuestionsByModulePage = () => {
    return loading ? (
       <div className="h-full flex items-center justify-center"> Loading..</div>
    ) : (
-      <div className="min-h-screen p-6">
+      <div className="min-h-screen p-10 bg-[#faf8ff]">
          <h1 className="text-2xl font-bold text-indigo-700">{module.title}</h1>
          <h2 className="text-l text-text-muted mt-2 mb-6">
             {module.description}

@@ -21,11 +21,11 @@ export default function ModulesPage() {
    }, [topicId])
 
    return loading ? (
-      <div className="w-screen h-screen flex justify-center items-center">
+      <div className="w-screen h-screen flex justify-center items-center bg-[#faf8ff]">
          <div className="loader"></div>
       </div>
    ) : (
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-[#faf8ff]">
          <div className="container mx-auto p-6">
             <div className="mb-8">
                <h2

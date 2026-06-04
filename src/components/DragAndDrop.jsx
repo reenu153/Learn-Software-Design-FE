@@ -20,6 +20,8 @@ import { InterfacePortNode } from './custom nodes/IntefacePort'
 import { DatabaseNode } from './custom nodes/Database'
 import { ShoworHideComp } from './ShoworHideComp'
 
+const MAX_HISTORY = 50
+
 export default function DragAndDrop({
    setReactFlowInstance,
    activeTab,
@@ -41,6 +43,65 @@ export default function DragAndDrop({
    const [nodes, setNodes, onNodesChange] = useNodesState([])
    const [edges, setEdges, onEdgesChange] = useEdgesState([])
    const [sidebarOpen, setSidebarOpen] = useState(true)
+
+   const historyRef = useRef([])
+   // Flag to skip recording a snapshot when we're restoring from history
+   const isUndoingRef = useRef(false)
+
+   /** Save current state to history before a mutating action */
+   const pushHistory = useCallback((currentNodes, currentEdges) => {
+      if (isUndoingRef.current) return
+      historyRef.current = [
+         ...historyRef.current.slice(-MAX_HISTORY + 1),
+         {
+            nodes: currentNodes.map(n => ({ ...n, data: { ...n.data } })),
+            edges: currentEdges.map(e => ({ ...e })),
+         },
+      ]
+   }, [])
+
+   const undo = useCallback(() => {
+      const history = historyRef.current
+      if (history.length === 0) return
+
+      const prev = history[history.length - 1]
+      historyRef.current = history.slice(0, -1)
+
+      isUndoingRef.current = true
+
+      // Re-attach onChange callbacks to restored nodes
+      const restoredNodes = prev.nodes.map(n => ({
+         ...n,
+         data: {
+            ...n.data,
+            onChange: (id, changes) =>
+               setNodes(nds =>
+                  nds.map(node =>
+                     node.id === id
+                        ? { ...node, data: { ...node.data, ...changes } }
+                        : node
+                  )
+               ),
+         },
+      }))
+
+      setNodes(restoredNodes)
+      setEdges(prev.edges)
+
+      setTimeout(() => { isUndoingRef.current = false }, 0)
+   }, [setNodes, setEdges])
+
+
+   useEffect(() => {
+      const handleKeyDown = (e) => {
+         if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+            e.preventDefault()
+            undo()
+         }
+      }
+      window.addEventListener('keydown', handleKeyDown)
+      return () => window.removeEventListener('keydown', handleKeyDown)
+   }, [undo])
 
    const flowRef = useRef(null)
 
@@ -99,10 +160,8 @@ export default function DragAndDrop({
             id: crypto.randomUUID(),
             type: nodeTypes[type] ? type : 'classNode',
             position,
-
             data: {
                ...structuredClone(schema),
-
                onChange: (id, changes) =>
                   setNodes((nds) =>
                      nds.map((n) =>
@@ -114,17 +173,24 @@ export default function DragAndDrop({
             },
          }
 
-         setNodes((nds) => [...nds, newNode])
+         setNodes(nds => {
+            pushHistory(nds, edges)
+            return [...nds, newNode]
+         })
       },
-      [setNodes]
+      [setNodes, edges, pushHistory]
    )
 
    const onDragOver = (event) => event.preventDefault()
 
    const onReconnect = useCallback(
-      (oldEdge, newConnection) =>
-         setEdges((eds) => reconnectEdge(oldEdge, newConnection, eds)),
-      []
+      (oldEdge, newConnection) => {
+         setEdges((eds) => {
+            pushHistory(nodes, eds)
+            return reconnectEdge(oldEdge, newConnection, eds)
+         })
+      },
+      [nodes, pushHistory]
    )
 
    const onConnect = useCallback(
@@ -136,8 +202,9 @@ export default function DragAndDrop({
          sourceHandle = connection.targetHandle?.replace('target', 'source')
          targetHandle = connection.sourceHandle?.replace('source', 'target')
 
-         setEdges((eds) =>
-            addEdge(
+         setEdges((eds) => {
+            pushHistory(nodes, eds)
+            return addEdge(
                {
                   source,
                   target,
@@ -145,7 +212,6 @@ export default function DragAndDrop({
                   targetHandle,
                   type: 'uml',
                   style: { stroke: '#000000', strokeWidth: 2 },
-
                   data: {
                      umlType: selectedEdgeType,
                      animated: true,
@@ -153,9 +219,27 @@ export default function DragAndDrop({
                },
                eds
             )
-         )
+         })
       },
-      [selectedEdgeType, setEdges]
+      [selectedEdgeType, setEdges, nodes, pushHistory]
+   )
+
+   const handleNodesChange = useCallback(
+      (changes) => {
+         const hasRemoval = changes.some(c => c.type === 'remove')
+         if (hasRemoval) pushHistory(nodes, edges)
+         onNodesChange(changes)
+      },
+      [nodes, edges, onNodesChange, pushHistory]
+   )
+
+   const handleEdgesChange = useCallback(
+      (changes) => {
+         const hasRemoval = changes.some(c => c.type === 'remove')
+         if (hasRemoval) pushHistory(nodes, edges)
+         onEdgesChange(changes)
+      },
+      [nodes, edges, onEdgesChange, pushHistory]
    )
 
    return (
@@ -177,9 +261,10 @@ export default function DragAndDrop({
                edges={edges}
                nodeTypes={nodeTypes}
                edgeTypes={edgeTypes}
-               onNodesChange={onNodesChange}
-               onEdgesChange={onEdgesChange}
+               onNodesChange={handleNodesChange}
+               onEdgesChange={handleEdgesChange}
                onConnect={onConnect}
+               onReconnect={onReconnect}
                onDrop={onDrop}
                onDragOver={onDragOver}
                fitView

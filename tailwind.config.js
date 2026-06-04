@@ -36,6 +36,9 @@ module.exports = {
               },
         },
         extend: {
+          backgroundImage: {
+            'hero': "url('/src/bg_image.svg')",
+          },
             colors: {
                 primary: {
                   50: "#FAF5FF",

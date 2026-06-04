@@ -36,8 +36,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="w-full h-full  flex justify-center items-center h-screen">
-      <div className="space-y-4 w-80">
+    <div className="w-full h-full flex justify-center items-center bg-[#faf8ff]">
+      <div className="space-y-4 w-120 p-10 bg-white rounded-xl">
         <h2 className="text-xl font-bold">Login</h2>
 
     <div className="flex gap-4 items-center">

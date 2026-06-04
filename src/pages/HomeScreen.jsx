@@ -1,10 +1,10 @@
 import TopicCard from '../components/TopicCard'
 import { useEffect, useState } from 'react'
 import { fetchLessons } from '../api'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 
 const HomeScreen = () => {
-   const [coursePaths, setCoursePaths] = useState([]);
+   const [coursePaths, setCoursePaths] = useState([])
    const [loading, setLoading] = useState(false)
 
    const navigate = useNavigate()
@@ -22,7 +22,7 @@ const HomeScreen = () => {
 
    return (
       <div>
-         <div className="min-h-screen p-10">
+         <div className="h-[92vh] w-full p-10 bg-hero bg-contain bg-bottom bg-no-repeat overflow-hidden">
             <header className="mb-10 text-center  text-text">
                <h1
                   className="
@@ -41,20 +41,24 @@ const HomeScreen = () => {
                </p>
             </header>
 
-           {loading?<div className='loader mx-auto'/>:( <section className="flex flex-wrap items-center justify-center gap-5">
-               {coursePaths.map((t, index) => (
-                  <div
-                     key={t.id}
-                     className="
+            {loading ? (
+               <div className="loader mx-auto" />
+            ) : (
+               <section className="flex flex-wrap items-center justify-center gap-5">
+                  {coursePaths.map((t, index) => (
+                     <div
+                        key={t.id}
+                        className="
         transform transition-all duration-300
         hover:-translate-y-2 hover:scale-[1.02]
       "
-                     style={{ animationDelay: `${index * 80}ms` }}
-                  >
-                     <TopicCard topic={t} />
-                  </div>
-               ))}
-            </section>)}
+                        style={{ animationDelay: `${index * 80}ms` }}
+                     >
+                        <TopicCard topic={t} />
+                     </div>
+                  ))}
+               </section>
+            )}
          </div>
       </div>
    )

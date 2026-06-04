@@ -1,45 +1,72 @@
+import { useRef } from 'react'
 import { Handle, Position } from '@xyflow/react'
 import { motion } from 'framer-motion'
+
+const toItems = (arr) => arr.map((v) => ({ id: crypto.randomUUID(), value: v }))
+const toStrings = (items) => items.map((i) => i.value)
 
 export default function ClassNode({ id, data }) {
    const { name = '', attributes = [], methods = [] } = data
 
+   // Initialize stable items once — never re-derived from props
+   const attrItems = useRef(toItems(attributes))
+   const methItems = useRef(toItems(methods))
+
    const update = (patch) => {
-      data?.onChange?.(id, {
-         ...data,
-         ...patch,
-      })
+      data?.onChange?.(id, { ...data, ...patch })
    }
 
-   const remove = (key, index) =>
-    {
-        data?.onChange?.(id, {
-         ...data,
-         [key]: data[key].filter((_, i) => i !== index),
-      })
-   }
    const updateName = (value) => update({ name: value })
 
-   const updateAttribute = (i, value) => {
-      const copy = [...attributes]
-      copy[i] = value
-      update({ attributes: copy })
+   const updateAttribute = (itemId, value) => {
+      attrItems.current = attrItems.current.map((a) =>
+         a.id === itemId ? { ...a, value } : a
+      )
+      update({ attributes: toStrings(attrItems.current) })
    }
 
-   const updateMethod = (i, value) => {
-      const copy = [...methods]
-      copy[i] = value
-      update({ methods: copy })
+   const updateMethod = (itemId, value) => {
+      methItems.current = methItems.current.map((m) =>
+         m.id === itemId ? { ...m, value } : m
+      )
+      update({ methods: toStrings(methItems.current) })
    }
+
+   const removeAttribute = (itemId) => {
+      attrItems.current = attrItems.current.filter((a) => a.id !== itemId)
+      update({ attributes: toStrings(attrItems.current) })
+   }
+
+   const removeMethod = (itemId) => {
+      methItems.current = methItems.current.filter((m) => m.id !== itemId)
+      update({ methods: toStrings(methItems.current) })
+   }
+
+   const addAttribute = () => {
+      attrItems.current = [...attrItems.current, { id: crypto.randomUUID(), value: '' }]
+      update({ attributes: toStrings(attrItems.current) })
+   }
+
+   const addMethod = () => {
+      methItems.current = [...methItems.current, { id: crypto.randomUUID(), value: '' }]
+      update({ methods: toStrings(methItems.current) })
+   }
+
+   const TrashIcon = () => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+         <polyline points="3 6 5 6 21 6" />
+         <path d="M19 6l-1 14H6L5 6" />
+         <path d="M10 11v6M14 11v6" />
+         <path d="M9 6V4h6v2" />
+      </svg>
+   )
 
    return (
       <div>
          <motion.div
             className="w-64 bg-white border border-gray-300 shadow-md overflow-hidden"
-            whileHover={{
-               scale: 1.01,
-               boxShadow: '0 10px 25px rgba(0,0,0,0.08)',
-            }}
+            whileHover={{ scale: 1.01, boxShadow: '0 10px 25px rgba(0,0,0,0.08)' }}
          >
             {/* CLASS NAME */}
             <div className="bg-gradient-to-r from-purple-100 via-pink-100 to-indigo-100 border-b border-gray-300 px-3 py-2">
@@ -56,57 +83,25 @@ export default function ClassNode({ id, data }) {
                <p className="text-[11px] uppercase tracking-wider text-gray-400 mb-2 font-semibold">
                   Attributes
                </p>
-
                <div className="space-y-2">
-                  {attributes?.map((attr, i) => (
-                     <div key={i} className="flex items-center gap-1">
+                  {attrItems.current.map((attr) => (
+                     <div key={attr.id} className="flex items-center gap-1">
                         <input
-                           defaultValue={attr}
+                           defaultValue={attr.value}
                            placeholder="+ attribute: type"
-                           onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                e.preventDefault()
-                                update({
-                        attributes: [...attributes, ''],
-                     })
-                              }
-                            }}
-                           onChange={(e) => updateAttribute(i, e.target.value)}
+                           onChange={(e) => updateAttribute(attr.id, e.target.value)}
+                           onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addAttribute() } }}
                            className="w-full px-2 py-1 text-sm rounded-lg bg-gray-50 border border-gray-200 outline-none focus:border-purple-400 text-gray-700"
                         />
-                        <button
-                           onClick={() => remove('attributes', i)}
-                           className="text-gray-300 hover:text-red-400 transition-colors"
-                        >
-                           <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="18"
-                              height="18"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                           >
-                              <polyline points="3 6 5 6 21 6" />
-                              <path d="M19 6l-1 14H6L5 6" />
-                              <path d="M10 11v6M14 11v6" />
-                              <path d="M9 6V4h6v2" />
-                           </svg>
+                        <button onClick={() => removeAttribute(attr.id)}
+                           className="text-gray-300 hover:text-red-400 transition-colors">
+                           <TrashIcon />
                         </button>
                      </div>
                   ))}
                </div>
-
-               <button
-                  onClick={() =>
-                     update({
-                        attributes: [...attributes, ''],
-                     })
-                  }
-                  className="mt-3 w-full text-sm py-2 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition font-medium"
-               >
+               <button onClick={addAttribute}
+                  className="mt-3 w-full text-sm py-2 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition font-medium">
                   + Add Attribute
                </button>
             </div>
@@ -116,55 +111,25 @@ export default function ClassNode({ id, data }) {
                <p className="text-[11px] uppercase tracking-wider text-gray-400 mb-2 font-semibold">
                   Methods
                </p>
-
                <div className="space-y-2">
-                  {methods?.map((method, i) => (
-                     <div key={i} className="flex items-center">
+                  {methItems.current.map((method) => (
+                     <div key={method.id} className="flex items-center">
                         <input
-                           defaultValue={method}
+                           defaultValue={method.value}
                            placeholder="+ method(): type"
-                           onChange={(e) => updateMethod(i, e.target.value)}
-                           onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                e.preventDefault()
-                                update({ methods: [...methods, ''] })
-                              }
-                            }}
+                           onChange={(e) => updateMethod(method.id, e.target.value)}
+                           onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addMethod() } }}
                            className="flex-1 px-2 py-1 text-sm rounded-lg bg-gray-50 border border-gray-200 outline-none focus:border-indigo-400 text-gray-700"
                         />
-                        <button
-                           onClick={() => remove('methods', i)}
-                           className="p-1 text-gray-300 hover:text-red-400 transition-colors"
-                        >
-                           <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="18"
-                              height="18"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                           >
-                              <polyline points="3 6 5 6 21 6" />
-                              <path d="M19 6l-1 14H6L5 6" />
-                              <path d="M10 11v6M14 11v6" />
-                              <path d="M9 6V4h6v2" />
-                           </svg>
+                        <button onClick={() => removeMethod(method.id)}
+                           className="p-1 text-gray-300 hover:text-red-400 transition-colors">
+                           <TrashIcon />
                         </button>
                      </div>
                   ))}
                </div>
-
-               <button
-                  onClick={() =>
-                     update({
-                        methods: [...methods, ''],
-                     })
-                  }
-                  className="mt-3 w-full text-sm py-2 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition font-medium"
-               >
+               <button onClick={addMethod}
+                  className="mt-3 w-full text-sm py-2 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition font-medium">
                   + Add Method
                </button>
             </div>
@@ -172,13 +137,10 @@ export default function ClassNode({ id, data }) {
 
          <Handle type="source" id="top-source" position={Position.Top} />
          <Handle type="target" id="top-target" position={Position.Top} />
-
          <Handle type="source" id="bottom-source" position={Position.Bottom} />
          <Handle type="target" id="bottom-target" position={Position.Bottom} />
-
          <Handle type="source" id="left-source" position={Position.Left} />
          <Handle type="target" id="left-target" position={Position.Left} />
-
          <Handle type="source" id="right-source" position={Position.Right} />
          <Handle type="target" id="right-target" position={Position.Right} />
       </div>

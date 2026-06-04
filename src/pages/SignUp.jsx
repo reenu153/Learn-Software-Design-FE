@@ -39,9 +39,9 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="space-y-4 w-80">
-        <h2 className="text-xl font-bold text-center">Sign Up</h2>
+    <div className="flex justify-center items-center w-screen h-full bg-[#faf8ff] ">
+      <div className="space-y-4 w-120 p-10 bg-white rounded-xl">
+        <h2 className="text-xl font-bold">Sign Up</h2>
         <div>Enter username</div>
         <input
           className="border p-2 w-full"
