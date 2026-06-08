@@ -276,7 +276,7 @@ export default function DragAndDrop({
                   animated: true,
                   type: 'smoothstep',
                }}
-               deleteKeyCode={['Backspace', 'Delete']}
+               deleteKeyCode={['Backspace', 'Delete']} 
             >
                <Background />
                <Controls />
@@ -290,8 +290,8 @@ export default function DragAndDrop({
 const nodeSchema = {
    classNode: {
       name: '',
-      attributes: [],
-      methods: [],
+      attributes: [ ''],
+      methods: [''],
    },
 
    interfaceNode: {

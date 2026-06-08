@@ -1,59 +1,154 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Handle, Position } from '@xyflow/react'
 import { motion } from 'framer-motion'
 
 const toItems = (arr) => arr.map((v) => ({ id: crypto.randomUUID(), value: v }))
 const toStrings = (items) => items.map((i) => i.value)
 
+const dragState = { current: null }
+
+const ItemList = ({ itemsRef, field, placeholder, focusColor, handlers }) => (
+   <div
+      className="space-y-2"
+      onDragOver={(e) => handlers.onSectionDragOver(e, field)}
+      onDrop={(e) => handlers.onDrop(e, itemsRef, field)}
+   >
+      {itemsRef.current.map((item) => (
+         <div
+            key={item.id}
+            className="flex items-center gap-1"
+            draggable
+            onDragStart={(e) => handlers.onDragStart(e, itemsRef, field, item)}
+            onDragEnd={() => { handlers.onDragEnd() }}
+            onDragOver={(e) => handlers.onRowDragOver(e, item.id)}
+         >
+            <div
+               className="nodrag cursor-grab text-gray-300 hover:text-gray-500 active:cursor-grabbing"
+               onMouseDown={() => handlers.onGripMouseDown()}
+            >
+               <GripIcon />
+            </div>
+            <input
+               defaultValue={item.value}
+               placeholder={placeholder}
+               onChange={(e) => handlers.updateItem(itemsRef, field, item.id, e.target.value)}
+               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handlers.addItem(itemsRef, field) } }}
+               className={`flex-1 px-2 py-1 text-sm rounded-lg bg-gray-50 border border-gray-200 outline-none focus:border-${focusColor}-400 text-gray-700`}
+            />
+            <button
+               onClick={() => handlers.removeItem(itemsRef, field, item.id)}
+               className="text-gray-300 hover:text-red-400 transition-colors"
+            >
+               <TrashIcon />
+            </button>
+         </div>
+      ))}
+   </div>
+)
+
 export default function ClassNode({ id, data }) {
    const { name = '', attributes = [], methods = [] } = data
 
-   // Initialize stable items once — never re-derived from props
    const attrItems = useRef(toItems(attributes))
    const methItems = useRef(toItems(methods))
+   const [, bump] = useState(0)
+   const forceRender = () => bump(v => v + 1)
+   const isDragging = useRef(false)
+   const dragOverId = useRef(null)
 
-   const update = (patch) => {
-      data?.onChange?.(id, { ...data, ...patch })
-   }
-
+   const update = (patch) => data?.onChange?.(id, { ...data, ...patch })
    const updateName = (value) => update({ name: value })
 
-   const updateAttribute = (itemId, value) => {
-      attrItems.current = attrItems.current.map((a) =>
-         a.id === itemId ? { ...a, value } : a
-      )
-      update({ attributes: toStrings(attrItems.current) })
+   const updateItem = (ref, field, itemId, value) => {
+      ref.current = ref.current.map(x => x.id === itemId ? { ...x, value } : x)
+      update({ [field]: toStrings(ref.current) })
    }
 
-   const updateMethod = (itemId, value) => {
-      methItems.current = methItems.current.map((m) =>
-         m.id === itemId ? { ...m, value } : m
-      )
-      update({ methods: toStrings(methItems.current) })
+   const removeItem = (ref, field, itemId) => {
+      ref.current = ref.current.filter(x => x.id !== itemId)
+      update({ [field]: toStrings(ref.current) })
    }
 
-   const removeAttribute = (itemId) => {
-      attrItems.current = attrItems.current.filter((a) => a.id !== itemId)
-      update({ attributes: toStrings(attrItems.current) })
+   const addItem = (ref, field) => {
+      ref.current = [...ref.current, { id: crypto.randomUUID(), value: '' }]
+      update({ [field]: toStrings(ref.current) })
    }
 
-   const removeMethod = (itemId) => {
-      methItems.current = methItems.current.filter((m) => m.id !== itemId)
-      update({ methods: toStrings(methItems.current) })
+   const onDragStart = (e, ref, field, item) => {
+      isDragging.current = true
+      dragState.current = {
+         sourceNodeId: id,
+         field,
+         itemId: item.id,
+         value: item.value,
+         removeFromSource: () => {
+            ref.current = ref.current.filter(x => x.id !== item.id)
+            update({ [field]: toStrings(ref.current) })
+            forceRender()
+         },
+      }
+      e.dataTransfer.effectAllowed = 'move'
+      e.dataTransfer.setData('text/plain', item.value)
    }
 
-   const addAttribute = () => {
-      attrItems.current = [...attrItems.current, { id: crypto.randomUUID(), value: '' }]
-      update({ attributes: toStrings(attrItems.current) })
+   const onRowDragOver = (e, targetId) => {
+      e.preventDefault()
+      e.stopPropagation()
+      dragOverId.current = targetId
+      e.dataTransfer.dropEffect = 'move'
    }
 
-   const addMethod = () => {
-      methItems.current = [...methItems.current, { id: crypto.randomUUID(), value: '' }]
-      update({ methods: toStrings(methItems.current) })
+   const onSectionDragOver = (e, field) => {
+      const drag = dragState.current
+      if (!drag || drag.field !== field) return
+      e.preventDefault()
+      e.stopPropagation()
+      dragOverId.current = null
+      e.dataTransfer.dropEffect = 'move'
+   }
+
+   const onDrop = (e, ref, field) => {
+      e.preventDefault()
+      e.stopPropagation()
+      const drag = dragState.current
+      if (!drag || drag.field !== field) return
+
+      const newItem = { id: crypto.randomUUID(), value: drag.value }
+      const items = drag.sourceNodeId === id
+         ? ref.current.filter(x => x.id !== drag.itemId)
+         : [...ref.current]
+
+      if (dragOverId.current) {
+         const idx = items.findIndex(x => x.id === dragOverId.current)
+         idx >= 0 ? items.splice(idx, 0, newItem) : items.push(newItem)
+      } else {
+         items.push(newItem)
+      }
+
+      ref.current = items
+      update({ [field]: toStrings(ref.current) })
+      forceRender()
+
+      if (drag.sourceNodeId !== id) drag.removeFromSource()
+
+      dragState.current = null
+      dragOverId.current = null
+   }
+
+   const handlers = {
+      updateItem,
+      removeItem,
+      addItem,
+      onDragStart,
+      onDragEnd: () => { isDragging.current = false },
+      onGripMouseDown: () => { isDragging.current = true },
+      onRowDragOver,
+      onSectionDragOver,
+      onDrop,
    }
 
    return (
-      <div>
+      <div onMouseDown={(e) => { if (isDragging.current) e.stopPropagation() }}>
          <motion.div
             className="w-64 bg-white border border-gray-300 shadow-md overflow-hidden"
             whileHover={{ scale: 1.01, boxShadow: '0 10px 25px rgba(0,0,0,0.08)' }}
@@ -70,27 +165,15 @@ export default function ClassNode({ id, data }) {
 
             {/* ATTRIBUTES */}
             <div className="px-3 py-2 border-b border-gray-200">
-               <p className="text-[11px] uppercase tracking-wider text-gray-400 mb-2 font-semibold">
-                  Attributes
-               </p>
-               <div className="space-y-2">
-                  {attrItems.current.map((attr) => (
-                     <div key={attr.id} className="flex items-center gap-1">
-                        <input
-                           defaultValue={attr.value}
-                           placeholder="+ attribute: type"
-                           onChange={(e) => updateAttribute(attr.id, e.target.value)}
-                           onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addAttribute() } }}
-                           className="w-full px-2 py-1 text-sm rounded-lg bg-gray-50 border border-gray-200 outline-none focus:border-purple-400 text-gray-700"
-                        />
-                        <button onClick={() => removeAttribute(attr.id)}
-                           className="text-gray-300 hover:text-red-400 transition-colors">
-                           <TrashIcon />
-                        </button>
-                     </div>
-                  ))}
-               </div>
-               <button onClick={addAttribute}
+               <p className="text-[11px] uppercase tracking-wider text-gray-400 mb-2 font-semibold">Attributes</p>
+               <ItemList
+                  itemsRef={attrItems}
+                  field="attributes"
+                  placeholder="+ attribute: type"
+                  focusColor="purple"
+                  handlers={handlers}
+               />
+               <button onClick={() => addItem(attrItems, 'attributes')}
                   className="mt-3 w-full text-sm py-2 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition font-medium">
                   + Add Attribute
                </button>
@@ -98,27 +181,15 @@ export default function ClassNode({ id, data }) {
 
             {/* METHODS */}
             <div className="px-3 py-2">
-               <p className="text-[11px] uppercase tracking-wider text-gray-400 mb-2 font-semibold">
-                  Methods
-               </p>
-               <div className="space-y-2">
-                  {methItems.current.map((method) => (
-                     <div key={method.id} className="flex items-center">
-                        <input
-                           defaultValue={method.value}
-                           placeholder="+ method(): type"
-                           onChange={(e) => updateMethod(method.id, e.target.value)}
-                           onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addMethod() } }}
-                           className="flex-1 px-2 py-1 text-sm rounded-lg bg-gray-50 border border-gray-200 outline-none focus:border-indigo-400 text-gray-700"
-                        />
-                        <button onClick={() => removeMethod(method.id)}
-                           className="p-1 text-gray-300 hover:text-red-400 transition-colors">
-                           <TrashIcon />
-                        </button>
-                     </div>
-                  ))}
-               </div>
-               <button onClick={addMethod}
+               <p className="text-[11px] uppercase tracking-wider text-gray-400 mb-2 font-semibold">Methods</p>
+               <ItemList
+                  itemsRef={methItems}
+                  field="methods"
+                  placeholder="+ method(): type"
+                  focusColor="indigo"
+                  handlers={handlers}
+               />
+               <button onClick={() => addItem(methItems, 'methods')}
                   className="mt-3 w-full text-sm py-2 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition font-medium">
                   + Add Method
                </button>
@@ -146,3 +217,15 @@ const TrashIcon = () => (
       <path d="M9 6V4h6v2" />
    </svg>
 )
+
+const GripIcon = () => (
+   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="9" cy="5" r="1" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="5" r="1" fill="currentColor" stroke="none" />
+      <circle cx="9" cy="12" r="1" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="12" r="1" fill="currentColor" stroke="none" />
+      <circle cx="9" cy="19" r="1" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="19" r="1" fill="currentColor" stroke="none" />
+   </svg>
+) 
