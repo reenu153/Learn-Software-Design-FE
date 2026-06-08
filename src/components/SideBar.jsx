@@ -68,6 +68,9 @@ export default function Sidebar({
                      <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">
                         Nodes
                      </h3>
+                     <div className="py-3 border-t border-gray-100 text-xs text-gray-400">
+                        Tip: Click on the node type and drag to the editor to create a new node.
+                     </div>
 
                      <div className="space-y-3">
                         {[

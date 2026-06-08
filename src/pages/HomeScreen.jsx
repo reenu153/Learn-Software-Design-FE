@@ -22,7 +22,7 @@ const HomeScreen = () => {
 
    return (
       <div>
-         <div className="h-[92vh] w-full p-10 bg-hero bg-contain bg-bottom bg-no-repeat overflow-hidden">
+         <div className="h-[92vh] w-screen p-10 bg-hero bg-contain bg-bottom bg-no-repeat overflow-hidden">
             <header className="mb-10 text-center  text-text">
                <h1
                   className="

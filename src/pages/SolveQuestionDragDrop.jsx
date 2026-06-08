@@ -73,16 +73,7 @@ export default function SolveQuestionDragDrop() {
    return (
       <div className="p-6 flex flex-col gap-4">
          <div className="bg-gray-100 pb-4 rounded-lg">
-            <div className="flex justify-between items-center gap-2 mb-4">
                <h2 className="font-bold text-lg mb-2">Question</h2>
-
-               <button
-                  onClick={() => setShowTutorial(true)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-gray-200 hover:border-indigo-200 transition"
-               >
-                  ▶ See tutorial on editor usage
-               </button>
-            </div>
             <p style={{ whiteSpace: 'pre-wrap' }}>
                {(question?.question_text || 'Loading question...')?.replace(
                   /\\n/g,
@@ -102,6 +93,12 @@ export default function SolveQuestionDragDrop() {
 
          <div className="flex gap-4 w-[96vw] h-[900px] mb-5">
             <div className="w-full">
+            <button
+                  onClick={() => setShowTutorial(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 mb-2 text-xs font-semibold rounded-lg border border-gray-200 hover:border-indigo-200 transition"
+               >
+                  ▶ See tutorial on editor usage
+               </button>
                <DragAndDrop
                   key={question?.id}
                   initialGraph={question?.diagram_to_fill || null}
