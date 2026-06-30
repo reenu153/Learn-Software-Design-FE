@@ -157,7 +157,7 @@ export default function ClassNode({ id, data }) {
             <div className="bg-gradient-to-r from-purple-100 via-pink-100 to-indigo-100 border-b border-gray-300 px-3 py-2">
                <input
                   placeholder="Class Name"
-                  value={name}
+                  defaultValue={name}
                   onChange={(e) => updateName(e.target.value)}
                   className="w-full text-center font-bold text-gray-800 bg-transparent outline-none placeholder-gray-400"
                />

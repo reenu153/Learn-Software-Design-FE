@@ -133,10 +133,14 @@ export default function InterfaceNode({ id, data }) {
          </motion.div>
 
          {/* HANDLES */}
-         <Handle type="target" position={Position.Top} />
-         <Handle type="source" position={Position.Bottom} />
-         <Handle type="target" position={Position.Left} />
-         <Handle type="source" position={Position.Right} />
+         <Handle type="source" id="top-source" position={Position.Top} />
+         <Handle type="target" id="top-target" position={Position.Top} />
+         <Handle type="source" id="bottom-source" position={Position.Bottom} />
+         <Handle type="target" id="bottom-target" position={Position.Bottom} />
+         <Handle type="source" id="left-source" position={Position.Left} />
+         <Handle type="target" id="left-target" position={Position.Left} />
+         <Handle type="source" id="right-source" position={Position.Right} />
+         <Handle type="target" id="right-target" position={Position.Right} />
       </div>
    )
 }

@@ -90,15 +90,14 @@ export default function SolveQuestionDragDrop() {
                </p>
             )}
          </div>
-
-         <div className="flex gap-4 w-[96vw] h-[900px] mb-5">
-            <div className="w-full">
-            <button
+         <button
                   onClick={() => setShowTutorial(true)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 mb-2 text-xs font-semibold rounded-lg border border-gray-200 hover:border-indigo-200 transition"
+                  className="flex w-[220px] items-center gap-1.5 px-3 py-1.5 mb-2 text-xs font-semibold rounded-lg border border-gray-200 hover:border-indigo-200 transition"
                >
                   ▶ See tutorial on editor usage
                </button>
+         <div className="flex gap-4 w-[96vw] h-[900px] mb-5">
+            <div className="w-full">
                <DragAndDrop
                   key={question?.id}
                   initialGraph={question?.diagram_to_fill || null}
