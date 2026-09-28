@@ -39,8 +39,9 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex justify-center items-center w-screen h-full bg-[#faf8ff] ">
-      <div className="space-y-4 w-120 p-10 bg-white rounded-xl">
+    <div className="flex flex-col justify-center items-center w-screen h-full bg-[#faf8ff] ">
+      <div className="space-y-4 w-120 p-10 bg-white rounded-xl min-w-[400px]">
+
         <h2 className="text-xl font-bold">Sign Up</h2>
         <div>Enter username</div>
         <input
@@ -66,6 +67,14 @@ export default function SignupPage() {
         </div>
           <div className="text-center">Already have an account? <span className="font-bold cursor-pointer" onClick={()=> navigate('/login')}>Login</span></div>
         {loading && (<div className="loader mx-[150px]"/>)}
+      </div>
+      <div className="flex mt-[40px] max-w-[50%] gap-2 items-center rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+        <span aria-hidden="true">ⓘ</span>
+        <p>
+          <span className="font-semibold">Note:</span> this app is hosted on a free-tier
+          server that shuts down when not in use. The first request may take up to a
+          minute while the server starts. After that, it responds normally.
+        </p>
       </div>
     </div>
   );
