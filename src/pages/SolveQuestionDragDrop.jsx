@@ -49,6 +49,7 @@ export default function SolveQuestionDragDrop() {
       const flow = reactFlowInstance.toObject()
 
       const payload = {
+         solution_type: 'reactflow',    
          graph: {
             nodes: flow.nodes,
             edges: flow.edges,
