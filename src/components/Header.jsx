@@ -1,11 +1,19 @@
 import React from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, Navigate } from 'react-router-dom'
+import { isTokenExpired } from '../utils/token'
 
 export default function Header() {
    const navigate = useNavigate()
    const location = useLocation()
 
    const isHome = location.pathname === '/'
+
+   const token = localStorage.getItem("token");
+
+   if (!token || isTokenExpired(token)) {
+     localStorage.removeItem("token");
+     return <Navigate to="/login" />;
+   }
 
    const raw = localStorage.getItem('user')
    const user = raw ? JSON.parse(raw) : { name: 'User' }
@@ -50,7 +58,7 @@ export default function Header() {
             <div className="flex items-center gap-2">
                {/* Avatar */}
                <div className="w-8 h-8 rounded-full bg-primary-100 text-white flex items-center justify-center">
-                  {user?.charAt(0).toUpperCase()}
+                  {user?.charAt(0)?.toUpperCase()}
                </div>
 
                {/* Username */}

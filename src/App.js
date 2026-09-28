@@ -12,7 +12,7 @@ import SignupPage from './pages/SignUp'
 import SolveQuestionDragDrop from './pages/SolveQuestionDragDrop'
 
 const App = () => {
-   const location = useLocation()
+   const location = useLocation() 
    return (
       <div className="h-screen">
          {(location.pathname !== '/login' && location.pathname!== '/signup') && <Header />}
