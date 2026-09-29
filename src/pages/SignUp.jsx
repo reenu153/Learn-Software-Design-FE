@@ -11,15 +11,28 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
   const handleSignup = async () => {
     setLoading(true);
+    setError("")
     const res = await fetch(`${BASE_URL}/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password, role: "student" })
     });
+
+    if (res.status === 401 || res.status === 400) {
+      setError('This username is already taken. Please choose another one.')
+      setLoading(false)
+      return
+   }
+   if (!res.ok) {
+      setError('Something went wrong. Please try again.')
+      setLoading(false)
+      return
+   }
 
     const data = await res.json();
     
@@ -29,12 +42,10 @@ export default function SignupPage() {
       return;
     }
 
-
     localStorage.setItem("token",data.access_token);
     localStorage.setItem("user", JSON.stringify(data.username));
 
     setLoading(false);
-
     navigate("/");
   };
 
@@ -58,6 +69,26 @@ export default function SignupPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+          {error && (
+            <div
+               role="alert"
+               className="flex items-start gap-2 rounded-md border-l-4 border-[#ef4444] bg-[#fef2f2] px-3 py-2.5 text-sm text-red-700"
+            >
+               <svg
+                  className="mt-0.5 h-4 w-4 shrink-0 text-red-500"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+               >
+                  <path
+                     fillRule="evenodd"
+                     d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                     clipRule="evenodd"
+                  />
+               </svg>
+               <span>{error}</span>
+            </div>
+         )}
 
         <div
           onClick={handleSignup}
